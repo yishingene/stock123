@@ -12,6 +12,7 @@ from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+import time
 
 try:
     import argparse
@@ -19,9 +20,6 @@ try:
 except ImportError:
     flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/sheets.googleapis.com-python-quickstart.json
-# SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 SCOPES = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Google Sheets API Python Quickstart'
@@ -31,6 +29,7 @@ class GooglesheetService():
     
     service = None
     spreadsheetId = None
+    
 
     def __init__(self, spreadsheetId):
         self.spreadsheetId = spreadsheetId
@@ -63,6 +62,23 @@ class GooglesheetService():
         return credentials
 
 
+    requestCnt = 0
+    requestTime = time.time()
+
+    def checkQuota(self):
+
+        self.requestCnt += 1
+        now = time.time()
+        
+        print(self.requestCnt)
+        print(self.requestTime)
+        print(now)
+        
+        if now - self.requestTime > 60 and self.requestCnt > 90:
+            print("額度快要超過上限睡上 65 秒後再繼續...")
+            time.sleep(65) # 避免只睡一分鐘有風險
+            self.requestCnt = 1
+            self.requestTime = time.time()
 
     ''' add a new sheet and return sheetId '''
     def addSheet(self, title):
@@ -72,6 +88,10 @@ class GooglesheetService():
                     "addSheet": {
                         "properties": {
                             "title": title,
+                            "gridProperties": {
+                                "rowCount": 10,
+                                "columnCount": 4
+                            },
                         }
                     }
                 }
@@ -94,6 +114,15 @@ class GooglesheetService():
         request = self.service.spreadsheets().batchUpdate(spreadsheetId=self.spreadsheetId, body=body)
         response = request.execute()
         print(response)
+        
+    
+    def deleteSheetByRangeName(self, rangeName):
+        
+        sheetId = self.getSheetIdByRangeName(rangeName)
+        
+        if sheetId != None:
+            self.deleteSheet(sheetId)
+        
     
     
     def updateSheet(self, rangeName, rowList):
@@ -105,6 +134,8 @@ class GooglesheetService():
 #         print("%s" %(json.dumps(result, indent=4)))
     
     def appendSheet(self, rangeName, rowList):
+        self.checkQuota()
+        
         body = {
             "values" : rowList
         }
@@ -122,19 +153,31 @@ class GooglesheetService():
         return result.get('values', [])
     
     
-    def getRangesData(self, includeGridData=False):
+    rangeDataResp = None
+    
+    def getRangeData(self, includeGridData=False):
         ranges = [] # empty list means get all ranges data
         request = self.service.spreadsheets().get(spreadsheetId=self.spreadsheetId, ranges=ranges, includeGridData=includeGridData)
-        return request.execute()
+        
+        self.rangeDataResp = request.execute()
+        return self.rangeDataResp
     
     
     def getRangeNameList(self):
 
-        resp = self.getRangesData()
+        if self.rangeDataResp == None:
+            self.getRangeData()
+            
+        return [sheet["properties"]["title"] for sheet in self.rangeDataResp["sheets"] if sheet["properties"]["title"] != None]
 
-        return [sheet["properties"]["title"] for sheet in resp["sheets"] if sheet["properties"]["title"] != None]
-    
-    
+    # issue，必定先呼叫 getRangeNameList 才能拿到最新的資料，但我目前不想每次都重新呼叫
+    def getSheetIdByRangeName(self, rangeName):
+        
+        for sheet in self.rangeDataResp["sheets"]:
+            if sheet["properties"]["title"] == rangeName:
+                return sheet["properties"]["sheetId"] 
+            
+        return None
     
     # TODO get all sheet datas
     

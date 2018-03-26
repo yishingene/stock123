@@ -30,7 +30,21 @@ class GooglesheetService():
     service = None
     spreadsheetId = None
     
+    requestCnt = 0
+    requestTime = time.time()
 
+    def checkQuota(self):
+
+        self.requestCnt += 1
+        now = time.time()
+        
+        if now - self.requestTime > 60 and self.requestCnt > 90:
+            print("額度快要超過上限睡上 65 秒後再繼續...")
+            time.sleep(65) # 避免只睡一分鐘有風險
+            self.requestCnt = 1
+            self.requestTime = time.time()
+    
+    
     def __init__(self, spreadsheetId):
         self.spreadsheetId = spreadsheetId
         # init service
@@ -62,26 +76,9 @@ class GooglesheetService():
         return credentials
 
 
-    requestCnt = 0
-    requestTime = time.time()
-
-    def checkQuota(self):
-
-        self.requestCnt += 1
-        now = time.time()
-        
-        print(self.requestCnt)
-        print(self.requestTime)
-        print(now)
-        
-        if now - self.requestTime > 60 and self.requestCnt > 90:
-            print("額度快要超過上限睡上 65 秒後再繼續...")
-            time.sleep(65) # 避免只睡一分鐘有風險
-            self.requestCnt = 1
-            self.requestTime = time.time()
-
     ''' add a new sheet and return sheetId '''
     def addSheet(self, title):
+        self.checkQuota()
         body = {
           "requests": [
                 {
@@ -89,8 +86,8 @@ class GooglesheetService():
                         "properties": {
                             "title": title,
                             "gridProperties": {
-                                "rowCount": 10,
-                                "columnCount": 4
+                                "rowCount": 20,
+                                "columnCount": 10
                             },
                         }
                     }
@@ -102,6 +99,8 @@ class GooglesheetService():
         return response["replies"][0]["addSheet"]["properties"]["sheetId"]
 
     def deleteSheet(self, sheetId):
+        self.checkQuota()
+        
         body = {
             "requests": [
                 {
@@ -117,6 +116,7 @@ class GooglesheetService():
         
     
     def deleteSheetByRangeName(self, rangeName):
+        self.checkQuota()
         
         sheetId = self.getSheetIdByRangeName(rangeName)
         
@@ -124,8 +124,9 @@ class GooglesheetService():
             self.deleteSheet(sheetId)
         
     
-    
     def updateSheet(self, rangeName, rowList):
+        self.checkQuota()
+        
         body = {
             "values" : rowList
         }
@@ -145,10 +146,12 @@ class GooglesheetService():
     
     
     def clearSheet(self, rangeName):
+        self.checkQuota()
         self.service.spreadsheets().values().clear(spreadsheetId=self.spreadsheetId, range=rangeName, body={}).execute()
     
     
     def getValues(self, rangeName):
+        self.checkQuota()
         result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
         return result.get('values', [])
     
@@ -156,6 +159,7 @@ class GooglesheetService():
     rangeDataResp = None
     
     def getRangeData(self, includeGridData=False):
+        self.checkQuota()
         ranges = [] # empty list means get all ranges data
         request = self.service.spreadsheets().get(spreadsheetId=self.spreadsheetId, ranges=ranges, includeGridData=includeGridData)
         
@@ -172,6 +176,7 @@ class GooglesheetService():
 
     # issue，必定先呼叫 getRangeNameList 才能拿到最新的資料，但我目前不想每次都重新呼叫
     def getSheetIdByRangeName(self, rangeName):
+        self.checkQuota()
         
         for sheet in self.rangeDataResp["sheets"]:
             if sheet["properties"]["title"] == rangeName:

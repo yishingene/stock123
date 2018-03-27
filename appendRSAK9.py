@@ -15,6 +15,8 @@ def main():
 
 def append(stockId):
     
+    print("process stockId {}".format(stockId))
+    
     maxList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最高價
     minList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最低價
     k9 = 50
@@ -27,8 +29,6 @@ def append(stockId):
         newRowList.append(next(reader)) # header
         
         for row in reader:
-#             print(row)
-            
             if row[4] == '':
                 continue
             
@@ -48,7 +48,11 @@ def append(stockId):
             else:
                 minList.append(float(row[5])) # 最低價
     
-            rsv = round((100 * (float(row[6]) - min(minList)) / (max(maxList) - min(minList))), 2)
+            try:
+                rsv = round((100 * (float(row[6]) - min(minList)) / (max(maxList) - min(minList))), 2)
+            except ZeroDivisionError:
+                rsv = 0
+                
             if cnt <= 8:
                 pass
             elif cnt == 9: # 第九天初使 K9 值為 50
@@ -58,13 +62,21 @@ def append(stockId):
                 
             oldK9 = k9
             
-            row.append(rsv)
-            row.append(k9)
+            if len(row) >= 10:
+                row[9] = rsv
+            else:
+                row.append(rsv)
+                
+            if len(row) >= 11:
+                row[10] = k9
+            else:
+                row.append(k9)
+                
             newRowList.append(row)
             cnt += 1
 #             print(row[0] + "  RSA: " + str(rsv) + "\tK9: " + str(k9))
     
-    with open("data_complete/{}.csv".format(stockId), "w", newline="\n") as csvfile:
+    with open("data/{}.csv".format(stockId), "w", newline="\n") as csvfile:
         writer = csv.writer(csvfile)
         for row in newRowList:
             writer.writerow(row)

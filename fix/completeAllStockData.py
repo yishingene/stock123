@@ -44,7 +44,7 @@ def processFile(filename):
             
     # 撈取三月份新資料
     twseCrwaler = TWSECrawler()
-    rowList = twseCrwaler.fetch2(2018, 3, stockId)
+    rowList = twseCrwaler.crawlMonthData(2018, 3, stockId)
     for row in rowList:
         rowDict[row[0]] = row
         

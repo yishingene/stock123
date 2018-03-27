@@ -1,8 +1,9 @@
-import requests, collections, time
+import requests, time
+import json
+import datetime
+import csv
+import os
 
-DATATUPLE = collections.namedtuple('Data', ['date', 'capacity', 'turnover', 'open', 'high', 'low', 'close', 'change', 'transaction'])
-    
-TWSE_BASE_STOCK_URL = "http://www.twse.com.tw/exchangeReport/STOCK_DAY"
 
 class TWSECrawler():
     
@@ -12,7 +13,8 @@ class TWSECrawler():
     def _make_datatuple(self, data):
         """Convert '106/05/01' to '2017/05/01'"""
         data[0] = data[0].strip()
-        data[0] = '/'.join([str(int(data[0].split('/')[0]) + 1911)] + data[0].split('/')[1:])
+        if not data[0].startswith("20"):
+            data[0] = '/'.join([str(int(data[0].split('/')[0]) + 1911)] + data[0].split('/')[1:])
         
         data[1] = int(data[1].replace(',', ''))
         data[2] = int(data[2].replace(',', ''))
@@ -25,6 +27,7 @@ class TWSECrawler():
                 data[i] = float(data[i].replace(',', ''))
         
         data[7] = data[7].strip()
+        data[7] = float(data[7])
         data[8] = int(data[8].replace(',', ''))
         return data
 
@@ -32,11 +35,14 @@ class TWSECrawler():
         return [self._make_datatuple(d) for d in data]
 
     
-    def fetch(self, ym, sid, retry = 2):
+    ''' 抓取個股歷史資料 '''
+    def fetchMonthData(self, year, month, stockId, retry=2):
 
-        print('TWSE Fetching Stock [%s], ym: [%s]' %(sid, ym), flush=True)        
+        ym = '%d%02d' %(year, month)
+
+        print('TWSE Fetching Stock [%s], ym: [%s]' %(stockId, ym), flush=True)        
         
-        url = TWSE_BASE_STOCK_URL + "?response=json&date=" + ym + "01&stockNo=" + sid
+        url = "http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=" + ym + "01&stockNo=" + stockId
         print(url, flush=True)
         stat = None
         try:
@@ -53,7 +59,6 @@ class TWSECrawler():
                 raise Exception("stat error")
         except Exception as e:
             print(e, flush=True)
-            
             if retry > 0:
                 print("retry %s times, stat: %s" %(retry, stat), flush=True)
                 if stat == '很抱歉，沒有符合條件的資料!' or stat == '查詢日期小於81年1月4日，請重新查詢!':
@@ -61,7 +66,7 @@ class TWSECrawler():
                 else:
                     time.sleep(60)
                     
-                return self.fetch(ym, sid, retry - 1)
+                return self.fetch(ym, stockId, retry-1)
             else:
                 if stat != '很抱歉，沒有符合條件的資料!':
                     raise e
@@ -69,7 +74,54 @@ class TWSECrawler():
                     return None
 
 
-    def fetch2(self, year: int, month: int, sid: str, retry = 2):
-        ym = '%d%02d' %(year, month)
-        return self.fetch(ym, sid, retry)
+    def fetchStockInfo(self, stockId):
+        s = requests.Session()
+        s.get("http://mis.twse.com.tw/stock/index.jsp")
+        url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
+        r = s.get(url)
+        print("\nGET {}\n{}".format(url, r.text))
+        return r.json()
+
+    def fetchAllStockData(self):
+        
+        pass
+    
+    
+    def fetchAllStockFinalData(self, dt=datetime.datetime.now()):
+        
+        url = "http://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=%s&type=ALLBUT0999&_=%s" %(dt.strftime("%Y%m%d"), int(time.time()*1000))
+        r = requests.get(url)
+        print("GET %s\nResponse => %s" %(url, r.json()))
+        
+        js = r.json()
+        if js.get("stat") != "OK":
+            print("%s 查無資料" %(dt.strftime("%Y%m%d")))
+            return
             
+        for data in js.get("data5"):
+            sign = '-' if data[9].find('green') > 0 else ''
+            date = "{}/{}/{}".format(js["date"][0:4], js["date"][4:6], js["date"][6:8])
+            row = [date, data[2], data[4], data[5], data[6], data[7], data[8], sign+data[10], data[3]]
+            row = self._make_datatuple(row)
+            
+            stockId = data[0]
+            
+            if not os.path.exists("data/{}.csv".format(stockId)):
+#                 with open("data/{}.csv".format(stockId), "a", newline="") as f1:    
+#                     writer = csv.writer(f1)
+#                     writer.writerow(["日期","成交股數","成交金額","開盤價","最高價","最低價","收盤價","漲跌價差","成交筆數","RSV","K9"])
+                # 先略過，不處理，之後再處理這些新的
+                continue
+            
+            with open("data/{}.csv".format(stockId), "a", newline="") as f1:
+                writer = csv.writer(f1)
+                writer.writerow(row)
+
+
+if __name__ == "__main__":
+    dt = datetime.datetime(2018, 3, 26)
+    cr = TWSECrawler()
+    cr.fetchAllStockFinalData()
+    
+    
+    

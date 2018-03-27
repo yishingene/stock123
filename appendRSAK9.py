@@ -15,8 +15,6 @@ def main():
 
 def append(stockId):
     
-    print("process stockId {}".format(stockId))
-    
     maxList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最高價
     minList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最低價
     k9 = 50

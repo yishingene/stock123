@@ -13,7 +13,7 @@ class TWSECrawler():
     def _make_datatuple(self, data):
         """Convert '106/05/01' to '2017/05/01'"""
         data[0] = data[0].strip()
-        if not data[0].startswith("20"):
+        if not data[0].startswith("20") and not data[0].startswith("19"):
             data[0] = '/'.join([str(int(data[0].split('/')[0]) + 1911)] + data[0].split('/')[1:])
         
         data[1] = int(data[1].replace(',', ''))

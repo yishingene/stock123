@@ -10,6 +10,7 @@ import time
 def main():
     
     beginTime = time.time()
+    
     crawler = TWSECrawler()
     crawler.fetchAllStockFinalData()
     

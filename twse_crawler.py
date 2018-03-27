@@ -1,8 +1,8 @@
 import requests, time
-import json
 import datetime
 import csv
 import os
+from matplotlib.mlab import csv2rec
 
 
 class TWSECrawler():
@@ -113,13 +113,22 @@ class TWSECrawler():
                 # 先略過，不處理，之後再處理這些新的
                 continue
             
-            with open("data/{}.csv".format(stockId), "a", newline="") as f1:
+            # 先讀出舊的資料
+            rowDict = {}
+            with open("data/{}.csv".format(stockId), "r") as f1:
+                for row1 in csv.reader(f1):
+                    rowDict[row1[0]] = row1
+            
+            rowDict[row[0]] = row
+                      
+            with open("data/{}.csv".format(stockId), "w", newline="") as f1:
                 writer = csv.writer(f1)
-                writer.writerow(row)
+                for d in rowDict.values():
+                    writer.writerow(d)
 
 
 if __name__ == "__main__":
-    dt = datetime.datetime(2018, 3, 26)
+#     dt = datetime.datetime(2018, 3, 26)
     cr = TWSECrawler()
     cr.fetchAllStockFinalData()
     

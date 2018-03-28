@@ -5,7 +5,6 @@ Created on 2018年3月27日
 @author: rocky.wang
 '''
 from twse_crawler import TWSECrawler
-import appendRSAK9
 
 def main():
     # 爬資料寫到各 csv 檔

@@ -27,7 +27,6 @@ class TWSECrawler():
                 data[i] = float(data[i].replace(',', ''))
         
         data[7] = data[7].strip()
-        data[7] = float(data[7])
         data[8] = int(data[8].replace(',', ''))
         return data
 
@@ -99,13 +98,17 @@ class TWSECrawler():
             return
             
         for data in js.get("data5"):
-            sign = '-' if data[9].find('green') > 0 else ''
-            date = "{}/{}/{}".format(js["date"][0:4], js["date"][4:6], js["date"][6:8])
-            row = [date, data[2], data[4], data[5], data[6], data[7], data[8], sign+data[10], data[3]]
-            row = self._make_datatuple(row)
             
             stockId = data[0]
             
+            if data[9].find('red') > 0:
+                sign = '+'
+            else:
+                sign = '-' if data[9].find('green') > 0 else ''
+                
+            date = "{}/{}/{}".format(js["date"][0:4], js["date"][4:6], js["date"][6:8])
+            row = [date, data[2], data[4], data[5], data[6], data[7], data[8], sign+data[10], data[3]]
+            row = self._make_datatuple(row)
             if not os.path.exists("data/{}.csv".format(stockId)):
 #                 with open("data/{}.csv".format(stockId), "a", newline="") as f1:    
 #                     writer = csv.writer(f1)
@@ -128,9 +131,13 @@ class TWSECrawler():
 
 
 if __name__ == "__main__":
-#     dt = datetime.datetime(2018, 3, 26)
+
+    dt = datetime.datetime.now()
+    # 若要指定日期
+#     dt = datetime.datetime(2018, 3, 27)
+        
     cr = TWSECrawler()
-    cr.fetchAllStockFinalData()
+    cr.fetchAllStockFinalData(dt)
     
     
     

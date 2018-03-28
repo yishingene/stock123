@@ -6,19 +6,26 @@ Created on 2017年11月12日
 '''
 import csv
 import os
+import time
 
 def main():
+    t1 = time.time()
     for filename in os.listdir("data"):
         stockId = filename.split(".")[0]
-        append(stockId)
+        print("process stockId {}".format(stockId))
+        appendData(stockId)
+    
+    t2 = time.time()
+    
+    t3 = t2 - t1
+    print("spend {} seconds".format(t3))
     
 
-def append(stockId):
+def appendData(stockId):
     
     maxList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最高價
     minList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最低價
     k9 = 50
-    oldK9 = None
     cnt = 1
     newRowList = []
     
@@ -30,36 +37,31 @@ def append(stockId):
             if row[4] == '':
                 continue
             
-            i = 0
-            for i in range(len(row)):
-                row[i] = row[i].replace(",", "") # 把所有千分位去掉，以免影響 float 轉型
-                
             maxList.pop(0)
-            if row[4] == '':
-                maxList.append(0.0)
-            else:
-                maxList.append(float(row[4])) # 最高價
-                
+            maxList.append(float(row[4])) # 最高價
             minList.pop(0)
-            if row[5] == '':
-                minList.append(0.0)
-            else:
-                minList.append(float(row[5])) # 最低價
+            minList.append(float(row[5])) # 最低價
     
             try:
                 rsv = round((100 * (float(row[6]) - min(minList)) / (max(maxList) - min(minList))), 2)
             except ZeroDivisionError:
                 rsv = 0
                 
-            if cnt <= 8:
-                pass
-            elif cnt == 9: # 第九天初使 K9 值為 50
-                k9 = 50
-            else:
-                k9 = round((rsv / 3 + oldK9 * 2/3), 2)
+#             if cnt <= 8:
+#                 k9 = 50
+#                 pass
+#             elif cnt == 9: # 第九天初使 K9 值為 50
+#                 k9 = 50
+#             else:
+
+            # 前 9 天的 K9 值都為 50
+            if cnt >= 10:
+                # 更新，發現 yahoo 的算法應該是先四捨五入後再相加
+                v1 = round(rsv / 3, 2)
+                v2 = round(float(k9) * 2 / 3, 2)
+                k9 = round(v1+v2, 2) # 兩個都已經四捨五入，但相加還是可能會有無限小數，python 太奧妙了
+                k9 = format(k9, ".2f") # 在 linux 上跑 round 會無效
                 
-            oldK9 = k9
-            
             if len(row) >= 10:
                 row[9] = rsv
             else:
@@ -72,7 +74,6 @@ def append(stockId):
                 
             newRowList.append(row)
             cnt += 1
-#             print(row[0] + "  RSA: " + str(rsv) + "\tK9: " + str(k9))
     
     with open("data/{}.csv".format(stockId), "w", newline="\n") as csvfile:
         writer = csv.writer(csvfile)

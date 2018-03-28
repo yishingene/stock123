@@ -25,9 +25,6 @@ def main():
             for i in range(len(row)):
                 row[i] = row[i].replace(",", "") # 把所有千分位去掉，以免影響 float 轉型
     
-    #         if row[0] == "2017/09/21":
-    #             row[2] = 10600.34
-            
             maxList.pop(0)
             maxList.append(float(row[2])) # 最高價
             minList.pop(0)

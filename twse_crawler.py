@@ -108,13 +108,6 @@ class TWSECrawler():
                 
         self.appendDataByRowList(stockId, rowDict)
         
-#         with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
-#             writer = csv.writer(f1)
-#             for d in rowDict.values():
-#                 writer.writerow(d)
-#                 
-#         self.appendData(stockId)
-
 
     ''' 收盤後，爬所有收盤股票資料 '''    
     def fetchAllStockFinalData(self, dt=datetime.datetime.now()):

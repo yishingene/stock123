@@ -10,6 +10,7 @@ import time
 
 def main():
 
+    t1 = time.time()
     now = datetime.datetime.now()
     
     crawler = TWSECrawler()
@@ -22,6 +23,8 @@ def main():
     # 爬大盤資料寫入 csv 檔
     crawler.fetchStockInfo("t00")
     
+    t2 = time.time() - t1
+    print("total time {}".format(t2))
     
     
 if __name__ == "__main__":

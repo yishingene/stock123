@@ -86,7 +86,7 @@ class TWSECrawler():
 
         # 讀舊資料出來
         rowDict = {}
-        with open("data/{}.csv".format(stockId)) as f1:
+        with open("data/{}.csv".format(stockId), encoding="MS950") as f1:
             for row in csv.reader(f1):
                 rowDict[row[0]] = row
         

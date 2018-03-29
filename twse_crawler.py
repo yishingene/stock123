@@ -125,9 +125,6 @@ class TWSECrawler():
             
             stockId = data[0]
             
-            if not stockId == '0056':
-                continue
-            
             if data[9].find('red') > 0:
                 sign = '+'
             else:
@@ -149,10 +146,14 @@ class TWSECrawler():
                 for row1 in csv.reader(f1):
                     rowDict[row1[0]] = row1
             
-            row[3] = format(round(row[3], 2), ".2f")
-            row[4] = format(round(row[4], 2), ".2f")
-            row[5] = format(round(row[5], 2), ".2f")
-            row[6] = format(round(row[6], 2), ".2f")
+            if row[3] != None:
+                row[3] = format(round(row[3], 2), ".2f")
+            if row[4] != None:
+                row[4] = format(round(row[4], 2), ".2f")
+            if row[5] != None:
+                row[5] = format(round(row[5], 2), ".2f")
+            if row[6] != None:
+                row[6] = format(round(row[6], 2), ".2f")
             
             rowDict[row[0]] = row
                       

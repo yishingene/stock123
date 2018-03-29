@@ -149,6 +149,11 @@ class TWSECrawler():
                 for row1 in csv.reader(f1):
                     rowDict[row1[0]] = row1
             
+            row[3] = format(round(row[3], 2), ".2f")
+            row[4] = format(round(row[4], 2), ".2f")
+            row[5] = format(round(row[5], 2), ".2f")
+            row[6] = format(round(row[6], 2), ".2f")
+            
             rowDict[row[0]] = row
                       
             self.appendDataByRowList(stockId, rowDict)

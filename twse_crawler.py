@@ -77,7 +77,7 @@ class TWSECrawler():
         s.get("http://mis.twse.com.tw/stock/index.jsp")
         url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
         r = s.get(url)
-        print("GET URL => {}\nResponse => {}".format(url, r.text.strip().replace("False", "false")))
+        print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")))
         return r.json()
         
 
@@ -93,21 +93,27 @@ class TWSECrawler():
         js = self.crawlStockInfo(stockId)
         # 先不考慮錯的時候，直接讓它丟出，最外面直接 line notify 錯誤
 #         if js["rtcode"] == "0000":
-        v = int(js["msgArray"][0]["v"]) # 成交股數
-        z = float(js["msgArray"][0]["z"]) # 現價
-        y = float(js["msgArray"][0]["y"]) # 昨日價
+        
+        o = round(float(js["msgArray"][0]["o"]), 2)
+        h = round(float(js["msgArray"][0]["h"]), 2)
+        l = round(float(js["msgArray"][0]["l"]), 2)
+        z = round(float(js["msgArray"][0]["z"]), 2) # 現價
+        y = round(float(js["msgArray"][0]["y"]), 2) # 昨日價
+        v = int(js["msgArray"][0]["v"]) * 1000 # 成交股數 (v 在這邊應該是張數，要自己 * 1000 才會變真實的股數)
         
         dt = "{}/{}/{}".format(js["msgArray"][0]["d"][0:4], js["msgArray"][0]["d"][4:6], js["msgArray"][0]["d"][6:8])
         
-        row = [dt, v, int(v*z), js["msgArray"][0]["o"], js["msgArray"][0]["h"], js["msgArray"][0]["l"], js["msgArray"][0]["z"], round(z-y, 2), "", "", ""]
+        row = [dt, v, int(v*z), format(o, ".2f"), format(h, ".2f"), format(l, ".2f"), format(z, ".2f"), format(round(z-y, 2), ".2f"), "", "", ""]
         rowDict[row[0]] = row
                 
-        with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
-            writer = csv.writer(f1)
-            for d in rowDict.values():
-                writer.writerow(d)
-                
-        self.appendData(stockId)
+        self.appendDataByRowList(stockId, rowDict)
+        
+#         with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
+#             writer = csv.writer(f1)
+#             for d in rowDict.values():
+#                 writer.writerow(d)
+#                 
+#         self.appendData(stockId)
 
 
     ''' 收盤後，爬所有收盤股票資料 '''    
@@ -149,13 +155,66 @@ class TWSECrawler():
             
             rowDict[row[0]] = row
                       
-            with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
-                writer = csv.writer(f1)
-                for d in rowDict.values():
-                    writer.writerow(d)
+            self.appendDataByRowList(stockId, rowDict)
+                      
+#             with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
+#                 writer = csv.writer(f1)
+#                 for d in rowDict.values():
+#                     writer.writerow(d)
+#             
+#             # 更新 RSV & K9
+#             self.appendData(stockId)
+
+
+    ''' append RSV & K9 data，不再開檔，讓效率好一點 '''
+    def appendDataByRowList(self, stockId, rowDict):
+        
+        print("Process append RSV & K9 data for new {}".format(stockId))
+        
+        maxList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最高價
+        minList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最低價
+        k9 = 50
+        cnt = 1
+        newRowList = []
+
+        idx = 0
+        for row in rowDict.values():
+            if idx == 0:
+                newRowList.append(row) # header
+                idx += 1
+                continue
             
-            # 更新 RSV & K9
-            self.appendData(stockId)
+            if row[4] == '' or row[4] == None:
+                continue
+            
+            maxList.pop(0)
+            maxList.append(float(row[4])) # 最高價
+            minList.pop(0)
+            minList.append(float(row[5])) # 最低價
+    
+            try:
+                rsv = round((100 * (float(row[6]) - min(minList)) / (max(maxList) - min(minList))), 2)
+            except ZeroDivisionError:
+                rsv = 0
+                
+            # 前 9 天的 K9 值都為 50
+            if cnt >= 10:
+                # 更新，發現 yahoo 的算法應該是先四捨五入後再相加
+                v1 = round(rsv / 3, 2)
+                v2 = round(float(k9) * 2 / 3, 2)
+                k9 = round(v1+v2, 2) # 兩個都已經四捨五入，但相加還是可能會有無限小數，python 太奧妙了
+                k9 = format(k9, ".2f") # 在 linux 上跑 round 會無效
+                
+            row[9] = rsv
+            row[10] = k9
+                
+            newRowList.append(row)
+            cnt += 1
+        
+        with open("data/{}.csv".format(stockId), "w", newline="\n", encoding="MS950") as csvfile:
+            writer = csv.writer(csvfile)
+            for row in newRowList:
+                writer.writerow(row)
 
 
     ''' append RSV & K9 data '''

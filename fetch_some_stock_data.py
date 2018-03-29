@@ -11,6 +11,7 @@ sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
 
+    t1 = time.time()
     crawler = TWSECrawler()
     
     # 爬大盤資料寫入 csv 檔
@@ -20,6 +21,9 @@ def main():
     time.sleep(2)
     crawler.fetchStockInfo("0056")
     
+    t2 = time.time() - t1
+    
+    print("some total time {}".format(t2))
     
 if __name__ == "__main__":
     main()

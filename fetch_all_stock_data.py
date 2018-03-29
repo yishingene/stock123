@@ -8,6 +8,9 @@ from twse_crawler import TWSECrawler
 import datetime
 import time
 
+import sys
+sys.path.append("/data/data/com.termux/files/home/stock123")
+
 def main():
 
     t1 = time.time()

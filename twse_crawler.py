@@ -2,7 +2,6 @@ import requests, time
 import datetime
 import csv
 import os
-from matplotlib.mlab import csv2rec
 
 
 class TWSECrawler():

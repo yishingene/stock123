@@ -102,7 +102,7 @@ class TWSECrawler():
         row = [dt, v, int(v*z), js["msgArray"][0]["o"], js["msgArray"][0]["h"], js["msgArray"][0]["l"], js["msgArray"][0]["z"], round(z-y, 2), "", "", ""]
         rowDict[row[0]] = row
                 
-        with open("data/{}.csv".format(stockId), "w", newline="") as f1:
+        with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
             writer = csv.writer(f1)
             for d in rowDict.values():
                 writer.writerow(d)
@@ -143,13 +143,13 @@ class TWSECrawler():
             
             # 讀出舊的資料
             rowDict = {}
-            with open("data/{}.csv".format(stockId), "r") as f1:
+            with open("data/{}.csv".format(stockId), "r", encoding="MS950") as f1:
                 for row1 in csv.reader(f1):
                     rowDict[row1[0]] = row1
             
             rowDict[row[0]] = row
                       
-            with open("data/{}.csv".format(stockId), "w", newline="") as f1:
+            with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
                 writer = csv.writer(f1)
                 for d in rowDict.values():
                     writer.writerow(d)
@@ -169,7 +169,7 @@ class TWSECrawler():
         cnt = 1
         newRowList = []
         
-        with open("data/{}.csv".format(stockId), "r") as csvfile:
+        with open("data/{}.csv".format(stockId), "r", encoding="MS950") as csvfile:
             reader = csv.reader(csvfile)
             newRowList.append(next(reader)) # header
             for row in reader:
@@ -207,7 +207,7 @@ class TWSECrawler():
                 newRowList.append(row)
                 cnt += 1
         
-        with open("data/{}.csv".format(stockId), "w", newline="\n") as csvfile:
+        with open("data/{}.csv".format(stockId), "w", newline="\n", encoding="MS950") as csvfile:
             writer = csv.writer(csvfile)
             for row in newRowList:
                 writer.writerow(row)

@@ -125,6 +125,9 @@ class TWSECrawler():
             
             stockId = data[0]
             
+            if not stockId == '0056':
+                continue
+            
             if data[9].find('red') > 0:
                 sign = '+'
             else:

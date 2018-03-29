@@ -14,15 +14,10 @@ def main():
     
     crawler = TWSECrawler()
     
-    dt = datetime.datetime(2018, 3, 28)
-    
-    if int(str(now.hour) + format(now.minute, "02")) >= 1207:
+    # 13:50 分以後才會有資料
+    if int(str(now.hour) + format(now.minute, "02")) >= 1350:
         # 爬資料寫到各 csv 檔
-        crawler.fetchAllStockFinalData(dt)
-#         crawler.fetchAllStockFinalData()
-      
-    print("sleeping 5 seconds...")
-    time.sleep(5)
+        crawler.fetchAllStockFinalData()
       
     # 爬大盤資料寫入 csv 檔
     crawler.fetchStockInfo("t00")

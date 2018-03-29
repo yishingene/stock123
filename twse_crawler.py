@@ -205,7 +205,7 @@ class TWSECrawler():
                 k9 = round(v1+v2, 2) # 兩個都已經四捨五入，但相加還是可能會有無限小數，python 太奧妙了
                 k9 = format(k9, ".2f") # 在 linux 上跑 round 會無效
                 
-            row[9] = rsv
+            row[9] = format(rsv, ".2f")
             row[10] = k9
                 
             newRowList.append(row)

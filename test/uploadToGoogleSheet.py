@@ -6,7 +6,7 @@ Created on 2018年3月20日
 @author: Rocky
 '''
 import os
-from tmptrans.googleService import GooglesheetService
+from googleService import GooglesheetService
 import csv
 
 filenames = os.listdir()

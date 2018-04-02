@@ -12,13 +12,14 @@ import time
 def main():
     # 注意這個年度是股利所屬年度，發放是隔年
     # 1988 似乎是最後一年有資料了
-    year = 1988
-    for i in range(0, 1):
-        fetch(year-i)
-        time.sleep(10)
+#     year = 1988
+#     for i in range(0, 1):
+#         fetch(year-i)
+#         time.sleep(10)
 
+    fetch(2017)
 
-def fetch(year=2017):
+def fetch(year):
     
     headers = { 'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
                     'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

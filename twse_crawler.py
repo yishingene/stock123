@@ -178,7 +178,7 @@ class TWSECrawler():
         k9 = 50
         cnt = 1
         newRowList = []
-
+        
         idx = 0
         for row in rowDict.values():
             if idx == 0:
@@ -221,15 +221,18 @@ class TWSECrawler():
 
 if __name__ == "__main__":
 
+    t1 = time.time()
+
     dt = datetime.datetime.now()
     # 若要指定日期
 #     dt = datetime.datetime(2018, 3, 27)
         
     cr = TWSECrawler()
     
-#     cr.fetchAllStockFinalData(dt)
+    cr.fetchAllStockFinalData(dt)
     
-    js = cr.fetchStockInfo("0056")
+#     js = cr.fetchStockInfo("0056")
     
-    
+    t2 = time.time() - t1
+    print(t2)
     

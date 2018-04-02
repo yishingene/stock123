@@ -22,11 +22,12 @@ def main():
     if int(str(now.hour) + format(now.minute, "02")) >= 1350:
         # 爬資料寫到各 csv 檔
         crawler.fetchAllStockFinalData()
+        
       
     # 爬大盤資料寫入 csv 檔
     crawler.fetchStockInfo("t00")
     
-    t2 = time.time() - t1
+    t2 = int(time.time() - t1)
     print("total time {}".format(t2))
     
     

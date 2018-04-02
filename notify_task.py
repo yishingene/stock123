@@ -15,13 +15,13 @@ def main():
     now = datetime.datetime.now()
     
     # 取最後一筆資料
-    with open("data/t00.csv") as f1:
+    with open("data/t00.csv", encoding="MS950") as f1:
         row = list(csv.reader(f1))[-1]
 
     # 若日期等於今日才作通知
-    if row[0] != now.strftime("%Y/%m/%d"):
-        print("無今日資料，不進行通知")
-        return
+#     if row[0] != now.strftime("%Y/%m/%d"):
+#         print("無今日資料，不進行通知")
+#         return
     
     msg = "{}大盤 K 值 {}".format(row[0], row[10])
 

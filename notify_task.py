@@ -8,9 +8,12 @@ import datetime
 import lineTool
 import os
 import sys
+import time
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
+    
+    print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
     now = datetime.datetime.now()
     
@@ -37,18 +40,19 @@ def main():
     print(msg)
 
     # 發 LINE 通知
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN"], msg)
-#     time.sleep(2)   # delays for n seconds
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN2"], msg)
-#     time.sleep(2)
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN3"], msg)
-#     time.sleep(2)
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN4"], msg)
-#     time.sleep(2)
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN5"], msg)
-#     time.sleep(2)
-#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN6"], msg)
-    lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN"], msg)
+    time.sleep(2)   # delays for n seconds
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN2"], msg)
+    time.sleep(2)
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN3"], msg)
+    time.sleep(2)
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN4"], msg)
+    time.sleep(2)
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN5"], msg)
+    time.sleep(2)
+    lineTool.lineNotify(os.environ["LINE_0050_TOKEN6"], msg)
+    
+#     lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
 
 
 def composeMsg(stockId):

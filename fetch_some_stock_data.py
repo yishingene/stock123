@@ -7,9 +7,11 @@ from twse_crawler import TWSECrawler
 import time
 
 import sys
+import datetime
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
+    print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
     t1 = time.time()
     crawler = TWSECrawler()
@@ -23,7 +25,7 @@ def main():
     
     t2 = int(time.time() - t1)
     
-    print("some total time {}".format(t2))
+    print("fetch some total time {} seconds".format(t2))
     
 if __name__ == "__main__":
     main()

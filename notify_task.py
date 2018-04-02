@@ -2,11 +2,11 @@
 Created on 2018年3月27日
 @author: rocky.wang
 '''
+
 import csv
 import datetime
 import lineTool
 import os
-import time
 import sys
 sys.path.append("/data/data/com.termux/files/home/stock123")
 

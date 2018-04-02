@@ -4,13 +4,15 @@ Created on 2018年3月27日
 '''
 import csv
 import datetime
+import lineTool
+import os
 
 def main():
 
     now = datetime.datetime.now()
     
     # 取最後一筆資料
-    with open("t00.csv") as f1:
+    with open("data/t00.csv") as f1:
         row = list(csv.reader(f1))[-1]
 
     
@@ -20,9 +22,9 @@ def main():
 #         print("無今日資料，不進行通知")
 #         return
     
-    msg = "{}大盤 K 值 {}".format(row[0], row[6])
+    msg = "{}大盤 K 值 {}".format(row[0], row[10])
 
-    msg += "\n"
+    msg += "\n\n"
     msg += composeMsg("0050")
     msg += "\n"
     msg += composeMsg("0056")
@@ -35,24 +37,9 @@ def composeMsg(stockId):
     with open("data/{}.csv".format(stockId)) as f1:
         row = list(csv.reader(f1))[-1]
     
-    msg = "{}價格 {}\tK 值 {}".format(stockId, row[6], row[10])
-    
-#     diff = z - y
-#     diffStr = "%.2f" %(diff)
-#     if diff > 0:
-#         diffStr = "▲" + diffStr
-#         precentDiff = diff / y * 100
-#         preDiffStr = "%.2f" %(precentDiff) + "%"
-#         diffStr = diffStr + " (" + preDiffStr + ")"
-#         msg += " " + diffStr
-#     elif diff < 0:
-#         diffStr = "▼" + diffStr
-#         precentDiff = diff / y * 100
-#         preDiffStr = "%.2f" %(precentDiff) + "%"
-#         diffStr = diffStr + " (" + preDiffStr + ")"
-#         msg += " " + diffStr    
+    percent = float(row[7]) / (float(row[6]) - float(row[7])) * 100 # 透過漲跌金額算出昨日金額計算幅度
+    return "{}價格 {} {} ({:.2f}%)  K 值 {}".format(stockId, row[6], row[7], percent, row[10])
 
-    return msg
 
 if __name__ == "__main__":
     main()

@@ -26,12 +26,11 @@ for name in os.listdir():
                 
                 stockData.append(row)    
         
-for v in allDataDict.values():
+for stockData in allDataDict.values():
 
-    stockId = v[0][1]
+    stockId = stockData[0][1]
 
-    
-    
-    for d in v:
-        print(d)
-    print("----------------------")    
+    with open("data2/{}.csv".format(stockId), "w", newline="", encoding="utf-8") as f1:
+        wr = csv.writer(f1)
+        for row in stockData:
+            wr.writerow(row)

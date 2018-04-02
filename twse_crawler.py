@@ -107,8 +107,8 @@ class TWSECrawler():
         v = int(js["msgArray"][0]["v"]) * 1000 # 成交股數 (v 在這邊應該是張數，要自己 * 1000 才會變真實的股數)
         
         dt = "{}/{}/{}".format(js["msgArray"][0]["d"][0:4], js["msgArray"][0]["d"][4:6], js["msgArray"][0]["d"][6:8])
-        
-        row = [dt, v, int(v*z), format(o, ".2f"), format(h, ".2f"), format(l, ".2f"), format(z, ".2f"), format(round(z-y, 2), ".2f"), "", "", ""]
+        diff = "+" + format(round(z-y, 2), ".2f") if z-y > 0 else format(round(z-y, 2), ".2f")
+        row = [dt, v, int(v*z), format(o, ".2f"), format(h, ".2f"), format(l, ".2f"), format(z, ".2f"), diff, "", "", ""]
         rowDict[row[0]] = row
                 
         self.appendDataByRowList(stockId, rowDict)

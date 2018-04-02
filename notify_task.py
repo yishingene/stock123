@@ -53,7 +53,7 @@ def main():
 
 def composeMsg(stockId):
     
-    with open("data/{}.csv".format(stockId)) as f1:
+    with open("data/{}.csv".format(stockId), encoding="MS950") as f1:
         row = list(csv.reader(f1))[-1]
     
     percent = float(row[7]) / (float(row[6]) - float(row[7])) * 100 # 透過漲跌金額算出昨日金額計算幅度

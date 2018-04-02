@@ -176,7 +176,7 @@ class TWSECrawler():
     ''' append RSV & K9 data，不再開檔，讓效率好一點 '''
     def appendDataByRowList(self, stockId, rowDict):
         
-        print("Process append RSV & K9 data for new {}".format(stockId))
+        print("Process append RSV & K9 data for new {}".format(stockId), flush=True)
         
         maxList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最高價
         minList = [0, 0, 0, 0, 0, 0, 0, 0, 0] # 9 天的最低價

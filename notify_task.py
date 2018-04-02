@@ -6,6 +6,9 @@ import csv
 import datetime
 import lineTool
 import os
+import time
+import sys
+sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
 
@@ -27,7 +30,25 @@ def main():
     msg += "\n"
     msg += composeMsg("0056")
     
+    if float(row[10]) >= 80:
+        msg += "\n\n## 大盤 K 值已超過 80，建議賣出 ##"
+    elif float(row[10]) <=20:
+        msg += "\n\n## 大盤 K 值已低於 20，建議買入 ##"
     print(msg)
+
+    # 發 LINE 通知
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN"], msg)
+#     time.sleep(2)   # delays for n seconds
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN2"], msg)
+#     time.sleep(2)
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN3"], msg)
+#     time.sleep(2)
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN4"], msg)
+#     time.sleep(2)
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN5"], msg)
+#     time.sleep(2)
+#     lineTool.lineNotify(os.environ["LINE_0050_TOKEN6"], msg)
+    lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
 
 
 def composeMsg(stockId):

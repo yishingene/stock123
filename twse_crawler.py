@@ -84,13 +84,18 @@ class TWSECrawler():
     ''' 爬最新資料並寫回 csv 檔案 '''
     def fetchStockInfo(self, stockId):
 
+        js = self.crawlStockInfo(stockId)
+        
+        if not js["msgArray"][0]["d"] == datetime.datetime.now().strftime('%Y%m%d'):
+            print("查無今日資料不繼續處理檔案")
+            return
+
         # 讀舊資料出來
         rowDict = {}
         with open("data/{}.csv".format(stockId), encoding="MS950") as f1:
             for row in csv.reader(f1):
                 rowDict[row[0]] = row
         
-        js = self.crawlStockInfo(stockId)
         # 先不考慮錯的時候，直接讓它丟出，最外面直接 line notify 錯誤
 #         if js["rtcode"] == "0000":
         
@@ -229,10 +234,10 @@ if __name__ == "__main__":
         
     cr = TWSECrawler()
     
-    cr.fetchAllStockFinalData(dt)
+#     cr.fetchAllStockFinalData(dt)
     
-#     js = cr.fetchStockInfo("0056")
+    js = cr.fetchStockInfo("0056")
     
-    t2 = time.time() - t1
+    t2 = int(time.time() - t1)
     print(t2)
     

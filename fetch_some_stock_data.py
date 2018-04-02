@@ -16,12 +16,12 @@ def main():
     
     # 爬大盤資料寫入 csv 檔
     crawler.fetchStockInfo("t00")
-    time.sleep(2)
+    time.sleep(1)
     crawler.fetchStockInfo("0050")
-    time.sleep(2)
+    time.sleep(1)
     crawler.fetchStockInfo("0056")
     
-    t2 = time.time() - t1
+    t2 = int(time.time() - t1)
     
     print("some total time {}".format(t2))
     

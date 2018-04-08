@@ -27,16 +27,34 @@ def main():
         return
     
     msg = "{}大盤 K 值 {}".format(row[0], row[10])
-
     msg += "\n\n"
     msg += composeMsg("0050")
     msg += "\n"
     msg += composeMsg("0056")
     
     if float(row[10]) >= 80:
-        msg += "\n\n## 大盤 K 值已超過 80，建議賣出 ##"
+        msg += "\n\n## 大盤 K 值已超過 80，建議賣出 0050 ##"
     elif float(row[10]) <=20:
-        msg += "\n\n## 大盤 K 值已低於 20，建議買入 ##"
+        msg += "\n\n## 大盤 K 值已低於 20，建議買入 0050 ##"
+    
+    # 0056 額外通知訊息
+    with open("data/0056.csv", encoding="MS950") as f1:
+        row = list(csv.reader(f1))[-1]    
+    
+    amt = int(row[1]) // 1000
+    if amt >= 2000 and amt < 5000:
+        msg += "\n\n## 0056 成交量 {} 張，較平常多，可留意是否較低價可買入 ##".format(amt)
+    elif amt >= 5000 and amt < 8000:
+        msg += "\n\n## 0056 成交量 {} 張，數量偏大，可留意是否較低價可買入 ##".format(amt)
+    elif amt >= 8000:
+        msg += "\n\n## 0056 成交量 {} 張，異常的高，請留意是否較低價可買入 ##".format(amt)
+    
+    k9 = float(row[10])
+    if k9 <= 20:
+        msg += "\n\n## 0056 K值已低於 20，可考慮低價可買入 ##".format(amt)
+    elif k9 >= 80:
+        msg += "\n\n## 0056 K值已高於 80，可考慮價差 1元以上賣出 ##".format(amt)
+    
     print(msg)
 
     # 發 LINE 通知

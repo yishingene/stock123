@@ -9,8 +9,11 @@ stockNum = 1000
 buyPrice = 20
 salePrice = 20.25
 
-# buyPrice = 8.75
-# salePrice = 8.71
+buyPrice = 8.75
+salePrice = 8.71
+
+buyPrice = 49.30
+salePrice = 49.60
 
 buyCost = stockNum * buyPrice * 0.001425
 print("buy cost:\t{:.2f}".format(buyCost))

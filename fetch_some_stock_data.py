@@ -37,7 +37,7 @@ def main():
         
         crawler.fetchStockInfo(value[0])
 
-        with open("data/{}.csv".format(value[0])) as f1:
+        with open("data/{}.csv".format(value[0]), encoding="MS950") as f1:
             if len(value) == 4:
                 value.append("") # 補齊「通知日期」欄位，避免 index out of range
             # 取最後一行

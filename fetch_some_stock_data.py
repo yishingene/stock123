@@ -9,6 +9,8 @@ import time
 import sys
 import datetime
 from googleService import GooglesheetService
+import lineTool
+import os
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
@@ -27,11 +29,7 @@ def main():
     
     # 我自己在 googlesheet 的觀注清單
     googlesheetService = GooglesheetService("1dFqFS_KLPIQDbuORvBKrMQEXgv8AYN6VNYvaZvYpVTk")
-    cnt = -1
-    for value in googlesheetService.getValues("低價買入"):
-        cnt += 1
-        if cnt == 0:
-            continue
+    for value in googlesheetService.getValues("低價買入!A2:Z10000"):
         crawler.fetchStockInfo(value[0])
         time.sleep(1)
     
@@ -42,5 +40,7 @@ def main():
 
     
 if __name__ == "__main__":
-    main()
-
+    try:
+        main()
+    except:
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch_some_stock_data 發生錯誤")

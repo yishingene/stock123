@@ -12,7 +12,7 @@ from googleService import GooglesheetService
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
-    print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+    print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
     t1 = time.time()
     crawler = TWSECrawler()

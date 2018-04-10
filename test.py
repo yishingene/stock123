@@ -2,9 +2,9 @@
 Created on 2018年3月29日
 @author: rocky.wang
 '''
+import requests
 
-a = 1
+url = "https://histock.tw/stock/financial.aspx?no=1215&st=2"
 
-b = format(a, ".2f")
-
-print(b)
+resp = requests.get(url)
+print(resp.text)

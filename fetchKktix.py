@@ -15,10 +15,11 @@ import traceback
 
 def main():
     try:
+        print("start run")
         fetch()
     except:
         traceback.print_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch kktix data fail")
+#         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch kktix data fail")
 
 
 def fetch():
@@ -26,7 +27,8 @@ def fetch():
     url = "https://kktix.com/events"
     resp = requests.get(url)
     
-    soup = BeautifulSoup(resp.text, "html.parser")
+#     soup = BeautifulSoup(resp.text, "html.parser")
+    soup = BeautifulSoup(resp.text, "lxml")
     
     liList = soup.find("ul", {"class": "event-list"}).findAll("li", {"class": "clearfix"})
     

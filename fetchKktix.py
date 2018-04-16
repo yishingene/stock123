@@ -26,7 +26,7 @@ def fetch():
     url = "https://kktix.com/events"
     resp = requests.get(url)
     
-    soup = BeautifulSoup(resp.text, "lxml")
+    soup = BeautifulSoup(resp.text, "html.parser")
     
     liList = soup.find("ul", {"class": "event-list"}).findAll("li", {"class": "clearfix"})
     

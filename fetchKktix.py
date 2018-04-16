@@ -19,7 +19,7 @@ def main():
         fetch()
     except:
         traceback.print_exc()
-#         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch kktix data fail")
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch kktix data fail")
 
 
 def fetch():

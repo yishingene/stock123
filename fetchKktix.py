@@ -10,12 +10,14 @@ from bs4 import BeautifulSoup
 import csv
 import lineTool
 import os
+import traceback
 
 
 def main():
     try:
         fetch()
     except:
+        traceback.print_exc()
         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch kktix data fail")
 
 

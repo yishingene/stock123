@@ -11,11 +11,14 @@ import csv
 import lineTool
 import os
 import traceback
+import datetime
 
 
 def main():
     try:
-        print("start run")
+        print("\n---------------------------------")
+        print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+        print("---------------------------------")
         fetch()
     except:
         traceback.print_exc()

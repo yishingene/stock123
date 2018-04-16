@@ -17,8 +17,8 @@ import datetime
 def main():
     try:
         print("\n---------------------------------")
-        print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
-        print("---------------------------------")
+        print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+        print("---------------------------------", flush=True)
         fetch()
     except:
         traceback.print_exc()

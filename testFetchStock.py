@@ -12,20 +12,17 @@ import traceback
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
-    print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
-
-    t1 = time.time()
     crawler = TWSECrawler()
     
+    # 4205 
+    # 6803  應該都是上櫃，所以查不到，而且我也沒詳細資料
+    
     # 爬大盤資料寫入 csv 檔
-    crawler.fetchStockInfo("9918")
+    crawler.fetchStockInfo("9926")
     
-    t2 = int(time.time() - t1)
     
-    print("test fetch total time {} seconds".format(t2))
     
 
-    
 if __name__ == "__main__":
     try:
         main()

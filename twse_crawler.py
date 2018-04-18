@@ -76,15 +76,24 @@ class TWSECrawler():
         s = requests.Session()
         s.get("http://mis.twse.com.tw/stock/index.jsp")
         url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
+        
+        url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
         r = s.get(url)
         print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")))
         return r.json()
+        
         
 
     ''' 爬最新資料並寫回 csv 檔案 '''
     def fetchStockInfo(self, stockId):
 
         js = self.crawlStockInfo(stockId)
+
+        # 不知道為什麼，有些就是會暫時沒資料
+        if js["rtcode"] == "0000" and js["rtmessage"] == "OK" and len(js["msgArray"]) == 0:
+#             lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "{} 查詢成功卻無資料".format(stockId))
+            print("查詢成功卻無資料")
+            return
         
         if not js["msgArray"][0]["d"] == datetime.datetime.now().strftime('%Y%m%d'):
             print("查無今日資料不繼續處理檔案")
@@ -236,7 +245,7 @@ if __name__ == "__main__":
     
 #     cr.fetchAllStockFinalData(dt)
     
-    js = cr.fetchStockInfo("0056")
+    js = cr.crawlStockInfo("4205")
     
     t2 = int(time.time() - t1)
     print(t2)

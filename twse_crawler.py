@@ -2,6 +2,7 @@ import requests, time
 import datetime
 import csv
 import os
+import lineTool
 
 
 class TWSECrawler():
@@ -91,7 +92,7 @@ class TWSECrawler():
 
         # 不知道為什麼，有些就是會暫時沒資料
         if js["rtcode"] == "0000" and js["rtmessage"] == "OK" and len(js["msgArray"]) == 0:
-#             lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "{} 查詢成功卻無資料".format(stockId))
+            lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "{} 查詢成功卻無資料".format(stockId))
             print("查詢成功卻無資料")
             return
         

@@ -18,7 +18,7 @@ def main():
     # 6803  應該都是上櫃，所以查不到，而且我也沒詳細資料
     
     # 爬大盤資料寫入 csv 檔
-    crawler.fetchStockInfo("9926")
+    crawler.fetchStockInfo("1726")
     
     
     

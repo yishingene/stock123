@@ -40,7 +40,10 @@ def main():
             value.append("") # 補齊「通知日期」欄位，避免 index out of range
         if len(value) == 6:
             value.append("") # 補齊「停用」欄位，避免 index out of range
-            
+        if len(value) == 7:
+            value.append("") # 補齊「更新時間」欄位，避免 index out of range
+        
+        value[7] = datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')
         rowList.append(value)
         
         if value[6] == '1':

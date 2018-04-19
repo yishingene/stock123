@@ -96,6 +96,11 @@ class TWSECrawler():
             print("查詢成功卻無資料")
             return
         
+        if js["rtcode"] == "0000" and js["rtmessage"] == "OK" and js["msgArray"][0].get("o", "") == '':
+            lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "{} 查詢成功卻無資料".format(stockId))
+            print("查詢成功卻無開盤價格")
+            return
+        
         if not js["msgArray"][0]["d"] == datetime.datetime.now().strftime('%Y%m%d'):
             print("查無今日資料不繼續處理檔案")
             return

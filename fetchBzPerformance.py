@@ -68,10 +68,9 @@ def fetchStockBzPerformance(stockId):
     
     if table == None:
         print("no data for", stockId)
-        rowList = []
         with open("data_bzPerformance/{}.csv".format(stockId), "w", newline="", encoding="utf-8") as f1:
             writer = csv.writer(f1)
-            writer.writerows(rowList)
+            writer.writerows([])
         return
     
     trList = table.findAll("tr", id=re.compile("^row"))

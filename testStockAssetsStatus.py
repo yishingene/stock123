@@ -19,7 +19,7 @@ def main():
 
 def fetchStockAssetsStatus(stockId):
 
-#     url = "https://goodinfo.tw/StockInfo/StockAssetsStatus.asp?STOCK_ID={}&RPT_CAT=M%5FYEAR&STEP=DATA&SHEET=資產負債金額".format(stockId)
+    url = "https://goodinfo.tw/StockInfo/StockAssetsStatus.asp"
     
     # 其實重點只有 referer & User-Agent 一定要有
     headers = {
@@ -40,7 +40,6 @@ def fetchStockAssetsStatus(stockId):
         "SHEET": "資產負債金額"
     }
     
-    url = "https://goodinfo.tw/StockInfo/StockAssetsStatus.asp"
     resp = requests.post(url, headers=headers, data=data)
     resp.encoding = "utf-8"
     

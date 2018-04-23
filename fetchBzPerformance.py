@@ -10,6 +10,7 @@ import re
 import csv
 import os
 import time
+import lineTool
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
         
         fetchStockBzPerformance(stockId)
 
-        time.sleep(30)
+        time.sleep(10)
 
 def fetchStockBzPerformance(stockId):
 
@@ -42,7 +43,7 @@ def fetchStockBzPerformance(stockId):
     resp.encoding = "utf-8"
     
     if "您的瀏覽量異常, 已影響網站速度" in resp.text:
-        print(resp.text)
+        raise Exception("您的瀏覽量異常, 已影響網站速度，我被抓包了")
     
     soup = BeautifulSoup(resp.text, "html.parser")
     table = soup.find("table", {"class": "solid_1_padding_3_0_tbl", "style": "font-size:10pt;line-height:16px;"})
@@ -71,6 +72,7 @@ def fetchStockBzPerformance(stockId):
         
 
 if __name__ == "__main__":
-    main()
-
-
+    try:
+        main()
+    except Exception as e:
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], e)

@@ -30,9 +30,27 @@ def main():
         
         stockId = name.split(".")[0]
         
-        fetchStockBzPerformance(stockId)
+        fetchStockBzPerformanceWithRetry(stockId)
 
         time.sleep(10)
+        
+        
+def fetchStockBzPerformanceWithRetry(stockId, retry=2):
+    
+    try:
+        fetchStockBzPerformance(stockId)
+    except Exception as e:
+        print("Error Occur, retry ", e)
+        # 如果是瀏覽量異常，再試也沒意義了
+        if str(e) == "您的瀏覽量異常, 已影響網站速度，我被抓包了":
+            raise e
+        
+        time.sleep(10)
+        retry -= 1
+        if retry > 0:
+            fetchStockBzPerformanceWithRetry(stockId, retry)
+        else:
+            raise Exception("重試超過三次失敗")
 
 def fetchStockBzPerformance(stockId):
 

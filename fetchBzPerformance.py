@@ -11,6 +11,7 @@ import csv
 import os
 import time
 
+
 def main():
     
     # 用來比對已經執行過的，不再重新執行
@@ -27,9 +28,10 @@ def main():
             continue
         
         stockId = name.split(".")[0]
+        
         fetchStockBzPerformance(stockId)
 
-        time.sleep(5)
+        time.sleep(30)
 
 def fetchStockBzPerformance(stockId):
 
@@ -38,6 +40,9 @@ def fetchStockBzPerformance(stockId):
     url = "https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID={}".format(stockId)
     resp = requests.get(url, headers={"User-Agent" : "Chrome/31.0.1650.63"})
     resp.encoding = "utf-8"
+    
+    if "您的瀏覽量異常, 已影響網站速度" in resp.text:
+        print(resp.text)
     
     soup = BeautifulSoup(resp.text, "html.parser")
     table = soup.find("table", {"class": "solid_1_padding_3_0_tbl", "style": "font-size:10pt;line-height:16px;"})

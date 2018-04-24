@@ -37,7 +37,7 @@ def main():
         fetchStockAssetsStatusWithRetry(stockId)
 
         print("sleep 10 seconds then start...")
-        time.sleep(10)
+        time.sleep(6)
         
         
 def fetchStockAssetsStatusWithRetry(stockId, retry=2):

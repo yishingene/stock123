@@ -35,7 +35,7 @@ def main():
                 writer = csv.writer(f1)
                 writer.writerow([dt, k9])
         
-            msg = "盤中 K 值已低於 20，目前 K 值為 {}，該出手了 !".format(k9)
+            msg = "盤中 K 值已低於 20，該出手了 !"
             print(msg)
             notifyAll(msg)
     
@@ -50,7 +50,7 @@ def main():
                 writer = csv.writer(f1)
                 writer.writerow([dt, k9])
         
-            msg = "盤中 K 值已高於 80，目前 K 值為 {}，該出手了 !".format(k9)
+            msg = "盤中 K 值已高於 80，該出手了 !"
             print(msg)
             notifyAll(msg)
     

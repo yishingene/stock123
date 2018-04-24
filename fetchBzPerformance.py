@@ -11,6 +11,7 @@ import csv
 import os
 import time
 import lineTool
+import datetime
 
 
 def main():
@@ -32,7 +33,8 @@ def main():
         
         fetchStockBzPerformanceWithRetry(stockId)
 
-        time.sleep(10)
+        print("sleep 20 seconds then start...")
+        time.sleep(20)
         
         
 def fetchStockBzPerformanceWithRetry(stockId, retry=2):
@@ -53,8 +55,7 @@ def fetchStockBzPerformanceWithRetry(stockId, retry=2):
             raise Exception("重試超過三次失敗")
 
 def fetchStockBzPerformance(stockId):
-
-    print("process", stockId)
+    print("\n{} 執行時間 {}".format(stockId, datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
     
     url = "https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID={}".format(stockId)
     resp = requests.get(url, headers={"User-Agent" : "Chrome/31.0.1650.63"})

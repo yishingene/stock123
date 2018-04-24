@@ -15,7 +15,7 @@ import time
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
-    print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+    print("\n執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
     
     dt = datetime.datetime.now().strftime('%Y/%m/%d')
 
@@ -39,7 +39,7 @@ def main():
             print(msg)
             notifyAll(msg)
     
-    if k9 >= 80:
+    elif k9 >= 80:
         with open("notify.csv", encoding="utf-8") as f1:
             row = list(csv.reader(f1))[-1]
     
@@ -53,7 +53,9 @@ def main():
             msg = "盤中 K 值已高於 80，目前 K 值為 {}，該出手了 !".format(k9)
             print(msg)
             notifyAll(msg)
-            
+    
+    else:
+        print("不進行通知，目前 K 值 {}".format(k9))      
             
 def notifyAll(msg):
     # 發 LINE 通知

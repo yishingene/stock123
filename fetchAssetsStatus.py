@@ -10,6 +10,7 @@ import csv
 import os
 import time
 import lineTool
+import datetime
 
 
 def main():
@@ -29,8 +30,13 @@ def main():
         
         stockId = name.split(".")[0]
         
+        if stockId.startswith("0"):
+            print("0 開頭我先跳過")
+            continue
+        
         fetchStockAssetsStatusWithRetry(stockId)
 
+        print("sleep 10 seconds then start...")
         time.sleep(10)
         
         
@@ -53,7 +59,7 @@ def fetchStockAssetsStatusWithRetry(stockId, retry=2):
 
 def fetchStockAssetsStatus(stockId):
 
-    print("process", stockId)
+    print("\n{} 執行時間 {}".format(stockId, datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
     
     url = "https://goodinfo.tw/StockInfo/StockAssetsStatus.asp"    
     headers = {

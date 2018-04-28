@@ -22,6 +22,10 @@ def main():
     with open("data/t00.csv", encoding="MS950") as f1:
         row = list(csv.reader(f1))[-1]
     
+    if row[0] != datetime.datetime.now().strftime('%Y/%m/%d'):
+        print("無今日大盤資料，不繼續執行")
+        return
+    
     k9 = float(row[10])
     
     if k9 <= 20:

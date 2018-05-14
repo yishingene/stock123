@@ -3,17 +3,24 @@
 Created on 2018年5月14日
 @author: rocky.wang
 '''
-import logging
 import sys
 import datetime
 from googleService import GooglesheetService
 import lineTool
 import os
 import traceback
+import csv
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
     print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+
+    # 建立 map 用來判斷該股是上市或上櫃
+    with open("stockIds.csv", encoding="utf-8") as f1:
+        rowList = list(csv.reader(f1))
+    stockIdMap = {}    
+    for row in rowList:
+        stockIdMap[row[0]] = row[4] # stockId : 上市/上櫃
 
     # 我自己在 googlesheet 的觀注清單 v2
     googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
@@ -45,11 +52,20 @@ def main():
             if value[9] != datetime.datetime.now().strftime('%Y%m%d'):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[7], value[8])
                 value[9] = datetime.datetime.now().strftime('%Y%m%d')
+        
+        value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
+        if stockIdMap[value[0]] == "上櫃":
+            value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
+            value[5] = 'N/A'
+            value[6] = 'N/A'
+            value[7] = 'N/A'
+        else:
+            value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
+            value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
+            value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)
+            value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
 
-        value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
-        value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
-        value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)
-
+    # 其實應該只要更新時間欄位就好，其他欄位不要再更新，但我懶的再改了，之後再說
     googlesheetService.updateSheet("工作表1", rowList)
 
     if msg != '':
@@ -64,4 +80,4 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         traceback.print_exc()
-#         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "notifyRockyPrice 發生錯誤")
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "notifyRockyPrice 發生錯誤")

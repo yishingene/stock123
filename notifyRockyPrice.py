@@ -25,7 +25,7 @@ def main():
 
     sheetDataList = [
         ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "工作表1", os.environ["LINE_TEST_TOKEN"]],
-        ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", "5DOeBF8WuWXOM305j61WAQ8ZnJGMurerx5y4CLJ9EyL"]
+        ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", os.environ["LINE_REGINA_TOKEN"]]
     ]
     
     for sheetData in sheetDataList:
@@ -85,7 +85,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         print("notify msg => " + msg)
         lineTool.lineNotify(notifyLineToken, msg)
         
-    print("process {}/{} completed.".format(sheetId, sheetName))
+    print("process {}/{}/{} completed.".format(sheetId, sheetName, notifyLineToken))
     
     
 if __name__ == "__main__":

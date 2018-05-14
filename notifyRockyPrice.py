@@ -12,23 +12,36 @@ import traceback
 import csv
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
+# 建立 map 用來判斷該股是上市或上櫃
+with open("stockIds.csv", encoding="utf-8") as f1:
+    rowList = list(csv.reader(f1))
+stockIdMap = {}    
+for row in rowList:
+    stockIdMap[row[0]] = row[4] # stockId : 上市/上櫃
+
+
 def main():
     print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
-    # 建立 map 用來判斷該股是上市或上櫃
-    with open("stockIds.csv", encoding="utf-8") as f1:
-        rowList = list(csv.reader(f1))
-    stockIdMap = {}    
-    for row in rowList:
-        stockIdMap[row[0]] = row[4] # stockId : 上市/上櫃
+    sheetDataList = [
+        ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "工作表1", os.environ["LINE_TEST_TOKEN"]],
+        ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", "5DOeBF8WuWXOM305j61WAQ8ZnJGMurerx5y4CLJ9EyL"]
+    ]
+    
+    for sheetData in sheetDataList:
+        processSheet(sheetData[0], sheetData[1], sheetData[2])
 
-    # 我自己在 googlesheet 的觀注清單 v2
-    googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
+    print('執行完畢')
+
+
+def processSheet(sheetId, sheetName, notifyLineToken):
+
+    googlesheetService = GooglesheetService(sheetId)
     
     rowNum = 0    
     rowList = []
     msg = ""
-    for value in googlesheetService.getValues("工作表1!A1:Z10000"):
+    for value in googlesheetService.getValues(sheetName):
         rowNum += 1
         rowList.append(value)
         
@@ -66,14 +79,14 @@ def main():
             value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
 
     # 其實應該只要更新時間欄位就好，其他欄位不要再更新，但我懶的再改了，之後再說
-    googlesheetService.updateSheet("工作表1", rowList)
+    googlesheetService.updateSheet(sheetName, rowList)
 
     if msg != '':
         print("notify msg => " + msg)
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
+        lineTool.lineNotify(notifyLineToken, msg)
+        
+    print("process {}/{} completed.".format(sheetId, sheetName))
     
-    print('執行完畢')
-
     
 if __name__ == "__main__":
     try:

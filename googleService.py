@@ -130,10 +130,10 @@ class GooglesheetService():
         body = {
             "values" : rowList
         }
-        result = self.service.spreadsheets().values().update(spreadsheetId=self.spreadsheetId, range=rangeName, valueInputOption="RAW", body=body).execute()
+        result = self.service.spreadsheets().values().update(spreadsheetId=self.spreadsheetId, range=rangeName, valueInputOption="USER_ENTERED", body=body).execute()
 #         print('{0} cells updated.'.format(result.get('updatedCells')));
 #         print("%s" %(json.dumps(result, indent=4)))
-    
+
     def appendSheet(self, rangeName, rowList):
         self.checkQuota()
         

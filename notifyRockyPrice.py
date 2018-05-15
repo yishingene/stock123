@@ -61,7 +61,8 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         # 開始比價
         nowPrice = value[4]
         wantPrice = value[2]
-        if nowPrice < wantPrice:
+        
+        if nowPrice != "" and wantPrice != "" and float(nowPrice) <= float(wantPrice):
             if value[9] != datetime.datetime.now().strftime('%Y%m%d'):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[7], value[8])
                 value[9] = datetime.datetime.now().strftime('%Y%m%d')

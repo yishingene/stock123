@@ -24,7 +24,7 @@ def main():
     print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
     sheetDataList = [
-        ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "工作表1", os.environ["LINE_TEST_TOKEN"]],
+        ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "觀察清單", os.environ["LINE_TEST_TOKEN"]],
         ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", os.environ["LINE_REGINA_TOKEN"]]
     ]
     
@@ -48,7 +48,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         # header
         if rowNum == 1:
             columnNum = len(value) # 取 header 的總 column 數
-            value[9] = datetime.datetime.now().strftime('%m%d %H:%M:%S')
+            value[10] = datetime.datetime.now().strftime('%m%d %H:%M:%S')
             continue # header 不繼續下面的邏輯
         
         if len(value) == 0:
@@ -63,9 +63,9 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         wantPrice = value[2]
         
         if nowPrice != "" and wantPrice != "" and float(nowPrice) <= float(wantPrice):
-            if value[9] != datetime.datetime.now().strftime('%Y%m%d'):
-                msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[7], value[8])
-                value[9] = datetime.datetime.now().strftime('%Y%m%d')
+            if value[10] != datetime.datetime.now().strftime('%Y%m%d'):
+                msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
+                value[10] = datetime.datetime.now().strftime('%Y%m%d')
         
         value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
         if stockIdMap[value[0]] == "上櫃":
@@ -73,11 +73,13 @@ def processSheet(sheetId, sheetName, notifyLineToken):
             value[5] = 'N/A'
             value[6] = 'N/A'
             value[7] = 'N/A'
+            value[8] = 'N/A'
         else:
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
             value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)
-            value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
+            value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "volume") / 1000'.format(rowNum)
+            value[8] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
 
     # 其實應該只要更新時間欄位就好，其他欄位不要再更新，但我懶的再改了，之後再說
     googlesheetService.updateSheet(sheetName, rowList)

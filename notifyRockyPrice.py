@@ -69,11 +69,12 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         
         value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
         if stockIdMap[value[0]] == "上櫃":
-            value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
-            value[5] = 'N/A'
-            value[6] = 'N/A'
-            value[7] = 'N/A'
-            value[8] = 'N/A'
+#             value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
+#             value[5] = 'N/A'
+#             value[6] = 'N/A'
+#             value[7] = 'N/A'
+#             value[8] = 'N/A'
+            print("上櫃資料改由別隻處理")
         else:
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)

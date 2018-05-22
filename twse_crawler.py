@@ -82,7 +82,15 @@ class TWSECrawler():
         r = s.get(url)
         print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")))
         return r.json()
-        
+    
+    
+    def crawlStockInfoOtc(self, stockId):
+        s = requests.Session()
+        s.get("http://mis.twse.com.tw/stock/index.jsp")
+        url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
+        r = s.get(url)
+        print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")))
+        return r.json()    
         
 
     ''' 爬最新資料並寫回 csv 檔案 '''
@@ -241,18 +249,35 @@ class TWSECrawler():
 
 if __name__ == "__main__":
 
-    t1 = time.time()
-
-    dt = datetime.datetime.now()
     # 若要指定日期
+#     dt = datetime.datetime.now()
 #     dt = datetime.datetime(2018, 3, 27)
         
-    cr = TWSECrawler()
-    
+#     cr = TWSECrawler()
 #     cr.fetchAllStockFinalData(dt)
+
+    # 測試上櫃即時資料
+    cr = TWSECrawler()    
+    #js = cr.crawlStockInfoOtc("6803")
+    js = cr.crawlStockInfoOtc("4205")
+     
+    name = js["msgArray"][0]["n"]
+    openPrice = js["msgArray"][0]["o"]
+    nowPrice = js["msgArray"][0]["z"]
+    volume = js["msgArray"][0]["v"]
+    print(name, openPrice, nowPrice, volume)
     
-    js = cr.crawlStockInfo("4205")
+    # 測試上市即時資料
+#     cr = TWSECrawler()    
+#     js = cr.crawlStockInfo("1232")
     
-    t2 = int(time.time() - t1)
-    print(t2)
+    
+    
+    
+    
+    
+    
+    
+    
+    
     

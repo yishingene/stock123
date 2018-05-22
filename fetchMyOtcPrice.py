@@ -120,7 +120,7 @@ def updateSheet(sheetId, sheetName):
             if row != None:
                 value[4] = row[2] # 現價
                 value[5] = row[3] # 漲跌
-                value[6] = str(row[4] * 100) + "%" # 漲跌幅度
+                value[6] = row[4] # 漲跌幅度
                 value[7] = row[5] # 成交量
         else:
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)

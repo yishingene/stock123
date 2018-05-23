@@ -69,8 +69,6 @@ def main():
     for sheetData in sheetDataList:
         updateSheet(sheetData[0], sheetData[1])
     
-    
-    
     print('執行完畢')
 
 
@@ -118,11 +116,13 @@ def updateSheet(sheetId, sheetName):
         if stockIdMap[value[0]] == "上櫃":
             row = otcStockIdNameMap[value[0]]
             if row != None:
+                value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
                 value[4] = row[2] # 現價
                 value[5] = row[3] # 漲跌
                 value[6] = row[4] # 漲跌幅度
                 value[7] = row[5] # 成交量
         else:
+            value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
             value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)

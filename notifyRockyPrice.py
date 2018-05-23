@@ -67,8 +67,9 @@ def processSheet(sheetId, sheetName, notifyLineToken):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
                 value[10] = datetime.datetime.now().strftime('%Y%m%d')
         
-        value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
+        
         if stockIdMap[value[0]] == "上櫃":
+#             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
 #             value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
 #             value[5] = 'N/A'
 #             value[6] = 'N/A'
@@ -76,6 +77,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
 #             value[8] = 'N/A'
             print("上櫃資料改由別隻處理")
         else:
+            value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
             value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)

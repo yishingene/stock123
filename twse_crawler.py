@@ -98,6 +98,19 @@ class TWSECrawler():
 
         js = self.crawlStockInfo(stockId)
 
+        # {"userDelay":500,"rtmessage":"   ","rtcode":"0000"}
+        if js["rtcode"] == "0000" and js["rtmessage"] != "OK":
+            print("response 0000 but rtmessage:[{}], sleep and try again...".format(js["rtmessage"]))
+            time.sleep(5)
+            js = self.crawlStockInfo(stockId)
+            print(js)
+        
+        if js["rtcode"] == "0000" and js["rtmessage"] != "OK":
+            print("response 0000 but rtmessage:[{}], sleep and try again...".format(js["rtmessage"]))
+            time.sleep(5)
+            js = self.crawlStockInfo(stockId)
+            print(js)
+
         # 不知道為什麼，有些就是會暫時沒資料
         if js["rtcode"] == "0000" and js["rtmessage"] == "OK" and len(js["msgArray"]) == 0:
             lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "{} 查詢成功卻無資料".format(stockId))
@@ -112,6 +125,7 @@ class TWSECrawler():
         if not js["msgArray"][0]["d"] == datetime.datetime.now().strftime('%Y%m%d'):
             print("查無今日資料不繼續處理檔案")
             return
+        
 
         # 讀舊資料出來
         rowDict = {}
@@ -257,19 +271,19 @@ if __name__ == "__main__":
 #     cr.fetchAllStockFinalData(dt)
 
     # 測試上櫃即時資料
-    cr = TWSECrawler()    
-    #js = cr.crawlStockInfoOtc("6803")
-    js = cr.crawlStockInfoOtc("4205")
-     
-    name = js["msgArray"][0]["n"]
-    openPrice = js["msgArray"][0]["o"]
-    nowPrice = js["msgArray"][0]["z"]
-    volume = js["msgArray"][0]["v"]
-    print(name, openPrice, nowPrice, volume)
+#     cr = TWSECrawler()    
+#     #js = cr.crawlStockInfoOtc("6803")
+#     js = cr.crawlStockInfoOtc("5512")
+#      
+#     name = js["msgArray"][0]["n"]
+#     openPrice = js["msgArray"][0]["o"]
+#     nowPrice = js["msgArray"][0]["z"]
+#     volume = js["msgArray"][0]["v"]
+#     print(name, openPrice, nowPrice, volume)
     
     # 測試上市即時資料
-#     cr = TWSECrawler()    
-#     js = cr.crawlStockInfo("1232")
+    cr = TWSECrawler()    
+    js = cr.crawlStockInfo("t00")
     
     
     

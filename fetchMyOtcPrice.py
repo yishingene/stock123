@@ -44,9 +44,22 @@ def main():
     for stockId in otcStockIdNameMap.keys():
         cnt += 1
 #         if cnt >=3:
-#             continue
+#             continue # for test, don't want run too long
         cr = TWSECrawler()    
         js = cr.crawlStockInfoOtc(stockId)
+        
+        
+        if js['rtcode'] == '0000' and js["rtmessage"] != "OK":
+            print("查詢正確，但似乎無資料，等待 5 秒後再重新查詢一次...")
+            time.sleep(5)
+            js = cr.crawlStockInfoOtc(stockId)
+            print(js)
+            
+        if js['rtcode'] == '0000' and js["rtmessage"] != "OK":
+            print("查詢正確，但似乎無資料，等待 5 秒後再重新查詢一次...")
+            time.sleep(5)
+            js = cr.crawlStockInfoOtc(stockId)
+            print(js)
         
         name = js["msgArray"][0]["n"]
         nowPrice = js["msgArray"][0].get("z", "")

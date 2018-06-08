@@ -27,7 +27,7 @@ def fetch(year):
     
     url = "https://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT={}&INDUSTRY_CAT={}&YEAR={}".format("全部", "全部", year)
     
-    url = "https://goodinfo.tw/StockInfo/StockDividendPolicyList.asp?"
+#     url = "https://goodinfo.tw/StockInfo/StockDividendPolicyList.asp?"
     print(url)
 
 # Pandas 這樣的寫法是可以了，但資料看起來超亂，應該是我不會用，還是先用 BeautifulSoup 就好了
@@ -47,7 +47,7 @@ def fetch(year):
         rowList.append(row)
         
     with open("{}dividend.csv".format(year), "w", encoding="utf-8", newline="") as f1:
-        csv.writer(f1, delimiter="\t").writerows(rowList)
+        csv.writer(f1).writerows(rowList)
     
     print("completed")
 

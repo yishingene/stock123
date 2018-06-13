@@ -32,7 +32,7 @@ def main():
     sheetDataList = [
         ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "觀察清單", os.environ["LINE_TEST_TOKEN"]],
         ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", os.environ["LINE_REGINA_TOKEN"]],
-        ["1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc", "工作表1", os.environ["LINE_TEST_TOKEN"]],
+        ["1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc", "工作表1", os.environ["LINE_PING_TOKEN"]],
         
     ]
     

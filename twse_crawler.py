@@ -89,7 +89,7 @@ class TWSECrawler():
         s.get("http://mis.twse.com.tw/stock/index.jsp")
         url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
         r = s.get(url)
-        print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")))
+        print("GET URL => {}\n{}".format(url, r.text.strip().replace("False", "false")), flush=True)
         return r.json()    
         
 

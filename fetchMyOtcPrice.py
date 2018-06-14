@@ -31,8 +31,30 @@ def main():
 
     sheetDataList = [
         ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "觀察清單", os.environ["LINE_TEST_TOKEN"]],
+         
         ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", os.environ["LINE_REGINA_TOKEN"]],
+         
         ["1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc", "工作表1", os.environ["LINE_PING_TOKEN"]],
+        
+        ["1sV74mTvigJbBp9X5YLyjfuxFpL3z15N5hwa-f__H5Ko", "價格通知程式", os.environ["LINE_BOOKHOU_TOKEN"]], # 2 曹書豪
+        
+        ["1L_opWWX_JBplMA6g9NKErmsv5fzOwWLvI8nxImdqgR4", "工作表1", os.environ["LINE_KONLON_TOKEN"]], # 3 恐龍
+         
+        ["1eTY5L8vHgYJ9yRFfDiBTSc5ABIfvLleyhvAiqOgWag0", "觀察名單", os.environ["LINE_ZI_TOKEN"]], # 4 謝正誠
+         
+        ["1bgoMruYi1dxc_tkCmwHxt1cUVm2vs-YABi3IYkOFGO0", "YuWei 股票通知", os.environ["LINE_YUWEI_TOKEN"]], # 5 YuWei
+         
+        ["12bdseu3Kfb2VqQSU39UmeGds9vA-8H6vOHImRiuRXuA", "觀察股", os.environ["LINE_ACELIN_TOKEN"]], # 6 Ace Lin
+         
+        ["1D6Z_7hJeZZTXEh-Rtx1dcBKsrk3pc61p6q4DP04Xj_E", "money", os.environ["LINE_LISA_TOKEN"]], # 7 lisa
+ 
+        ["15lGfiP5F4bBVNLXGlLMj5A2EZsU209LVUp62306Nldc", "存股", os.environ["LINE_ZS_TOKEN"]], # 8 政憲
+         
+        ["102BsWD5WGlGeZt2ia2hJiT4najF1VfrFmuhaFfVofsc", "工作表1", os.environ["LINE_MAGGIECHOU_TOKEN"]], # 11 maggie chou
+         
+        ["1IW2j5I40uYgoaH2wrElEV81cqsFj7Ft-I_CB0D7aa_w", "股票報價通知", os.environ["LINE_CHARIES_TOKEN"]], # 12 charies
+         
+        ["1JXf1rSg8dsI09m8yy6CBFPOFydfiAnza-v-T705GCsE", "工作表1", os.environ["LINE_TINA_TOKEN"]], # 13 Tina
         
     ]
     
@@ -68,8 +90,6 @@ def main():
         yesPrice = js["msgArray"][0].get("y", "")
         volume = js["msgArray"][0].get("v", "")
         
-        print(stockId, name, nowPrice, yesPrice, volume)
-
         if nowPrice != "" and yesPrice != "":
             change = round(float(nowPrice) - float(yesPrice), 2)
             changepct = round(change / float(yesPrice), 4) 
@@ -89,6 +109,8 @@ def main():
 
 def processSheet(sheetId, sheetName):
 
+    print("抓取 OTC StockId {}/{}".format(sheetId, sheetName), flush=True)
+
     googlesheetService = GooglesheetService(sheetId)
     
     rowNum = 0    
@@ -104,10 +126,9 @@ def processSheet(sheetId, sheetName):
             continue # 略過空白行
 
         if stockIdMap[value[0]] == "上櫃":
-            print("put {} in".format(value[0]))
             otcStockIdNameMap[value[0]] = None # 本來是想放名稱，但這裡沒有
 
-    print("process {}/{} completed.".format(sheetId, sheetName))
+    print("抓取 OTC StockId {}/{} completed.".format(sheetId, sheetName))
     
 
 def updateSheet(sheetId, sheetName):    

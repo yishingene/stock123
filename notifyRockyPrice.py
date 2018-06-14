@@ -58,6 +58,8 @@ def main():
 
 def processSheet(sheetId, sheetName, notifyLineToken):
 
+    print("process {}/{}/{} ".format(sheetId, sheetName, notifyLineToken), flush=True)
+
     googlesheetService = GooglesheetService(sheetId)
     
     rowNum = 0    

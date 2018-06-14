@@ -56,6 +56,8 @@ def fetchAllSheetDataListFromMyGooglehseet():
 
 def processSheet(sheetId, sheetName, notifyLineToken):
 
+    print("process {}/{}/{} ".format(sheetId, sheetName, notifyLineToken), flush=True)
+
     googlesheetService = GooglesheetService(sheetId)
     
     rowNum = 0    
@@ -79,10 +81,16 @@ def processSheet(sheetId, sheetName, notifyLineToken):
                 value.append("")
 
         # 開始比價
-        nowPrice = value[4]
+        try:
+            nowPrice = float(value[4])
+        except:
+            print("something wrong", value[4])
+            nowPrice = 5000.0
+
         wantPrice = value[2]
         
-        if nowPrice != "" and wantPrice != "" and float(nowPrice) <= float(wantPrice):
+#         if nowPrice != "" and wantPrice != "" and nowPrice <= float(wantPrice):
+        if wantPrice != "" and nowPrice <= float(wantPrice):
             if value[10] != datetime.datetime.now().strftime('%Y%m%d'):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
                 value[10] = datetime.datetime.now().strftime('%Y%m%d')

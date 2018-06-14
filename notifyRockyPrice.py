@@ -24,36 +24,34 @@ for row in rowList:
 def main():
     print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
-    sheetDataList = [
-        ["1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8", "觀察清單", os.environ["LINE_TEST_TOKEN"]],
-        ["1aveGtt653D4freXOyDkIAPbuZ5Bmw7pd-eS1JfUH9F4", "觀察清單", os.environ["LINE_REGINA_TOKEN"]],
-        ["1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc", "工作表1", os.environ["LINE_PING_TOKEN"]],
-        
-        ["1sV74mTvigJbBp9X5YLyjfuxFpL3z15N5hwa-f__H5Ko", "價格通知程式", os.environ["LINE_BOOKHOU_TOKEN"]], # 2 曹書豪
-        
-        ["1L_opWWX_JBplMA6g9NKErmsv5fzOwWLvI8nxImdqgR4", "工作表1", os.environ["LINE_KONLON_TOKEN"]], # 3 恐龍
-        
-        ["1eTY5L8vHgYJ9yRFfDiBTSc5ABIfvLleyhvAiqOgWag0", "觀察名單", os.environ["LINE_ZI_TOKEN"]], # 4 謝正誠
-        
-        ["1bgoMruYi1dxc_tkCmwHxt1cUVm2vs-YABi3IYkOFGO0", "YuWei 股票通知", os.environ["LINE_YUWEI_TOKEN"]], # 5 YuWei
-        
-        ["12bdseu3Kfb2VqQSU39UmeGds9vA-8H6vOHImRiuRXuA", "觀察股", os.environ["LINE_ACELIN_TOKEN"]], # 6 Ace Lin
-        
-        ["1D6Z_7hJeZZTXEh-Rtx1dcBKsrk3pc61p6q4DP04Xj_E", "money", os.environ["LINE_LISA_TOKEN"]], # 7 lisa
-
-        ["15lGfiP5F4bBVNLXGlLMj5A2EZsU209LVUp62306Nldc", "存股", os.environ["LINE_ZS_TOKEN"]], # 8 政憲
-        
-        ["102BsWD5WGlGeZt2ia2hJiT4najF1VfrFmuhaFfVofsc", "工作表1", os.environ["LINE_MAGGIECHOU_TOKEN"]], # 11 maggie chou
-        
-        ["1IW2j5I40uYgoaH2wrElEV81cqsFj7Ft-I_CB0D7aa_w", "股票報價通知", os.environ["LINE_CHARIES_TOKEN"]], # 12 charies
-        
-        ["1JXf1rSg8dsI09m8yy6CBFPOFydfiAnza-v-T705GCsE", "工作表1", os.environ["LINE_TINA_TOKEN"]], # 13 Tina
-    ]
+    sheetDataList = fetchAllSheetDataListFromMyGooglehseet()
     
     for sheetData in sheetDataList:
-        processSheet(sheetData[0], sheetData[1], sheetData[2])
-
+        print("處理 {} 資料 {}/{}, Token: {}".format(sheetData[0], sheetData[1], sheetData[3], sheetData[2]), flush=True)
+        processSheet(sheetData[1], sheetData[3], sheetData[2])
+ 
     print('執行完畢')
+
+
+
+def fetchAllSheetDataListFromMyGooglehseet():
+    
+    googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
+    rowList = googlesheetService.getValues("掃描清單")
+    rowNum = 0
+    sheetDataList = []
+    for row in rowList:
+        rowNum += 1
+        if rowNum == 1:
+            continue
+        if len(row) == 0 or row[0] == '' and row[1] == '':
+            continue # 略過空白行
+        
+        sheetId = row[1].replace("https://docs.google.com/spreadsheets/d/", "").split("/")[0]
+        # name, sheetId, token, rangeName
+        sheetDataList.append([row[0], sheetId, row[2], row[3]])
+        
+    return sheetDataList
 
 
 def processSheet(sheetId, sheetName, notifyLineToken):
@@ -111,12 +109,10 @@ def processSheet(sheetId, sheetName, notifyLineToken):
     googlesheetService.updateSheet(sheetName, rowList)
 
     if msg != '':
-        print("notify msg => " + msg)
+        print("notify msg => {}".format(msg), flush=True)
         lineTool.lineNotify(notifyLineToken, msg)
         time.sleep(1)
         
-    print("process {}/{}/{} completed.".format(sheetId, sheetName, notifyLineToken))
-    
     
 if __name__ == "__main__":
     try:

@@ -83,6 +83,8 @@ def fetchOtcStockIdFormSheet(sheetId, sheetName):
             continue # header 不繼續下面的邏輯
         if len(value) == 0:
             continue # 略過空白行
+        if value[0] == '':
+            continue # 連股票代號都沒有的，略過
 
         if stockIdMap[value[0]] == "上櫃":
             stockDataMap[value[0]] = None # 本來是想放名稱，但這裡沒有

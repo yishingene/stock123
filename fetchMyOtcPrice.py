@@ -35,6 +35,7 @@ def main():
     for sheetData in sheetDataList:
         print("抓取 {} 的上櫃的代號 {}/{}".format(sheetData[0], sheetData[1], sheetData[3]), flush=True)
         fetchOtcStockIdFormSheet(sheetData[1], sheetData[3])
+        time.sleep(1)
     
     print("共 {} 筆上櫃代號準備抓取價格資料 {}\n".format(len(stockDataMap.keys()), stockDataMap.keys()))
 

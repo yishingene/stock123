@@ -56,8 +56,6 @@ def fetchAllSheetDataListFromMyGooglehseet():
 
 def processSheet(sheetId, sheetName, notifyLineToken):
 
-    print("process {}/{}/{} ".format(sheetId, sheetName, notifyLineToken), flush=True)
-
     googlesheetService = GooglesheetService(sheetId)
     
     rowNum = 0    
@@ -80,6 +78,9 @@ def processSheet(sheetId, sheetName, notifyLineToken):
             for i in range(columnNum - len(value)):
                 value.append("")
 
+        if value[0] == '':
+            continue # 連代號都沒有，其他卻還有 #N/A 的值，大家還是會亂搞，防呆
+
         # 開始比價
         try:
             nowPrice = float(value[4])
@@ -95,7 +96,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
                 value[10] = datetime.datetime.now().strftime('%Y%m%d')
         
-        
+        print(value)
         if stockIdMap[value[0]] == "上櫃":
 #             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
 #             value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)

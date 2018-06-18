@@ -1,5 +1,5 @@
 '''
-crawl 2017股利年度除權息日程  (2018年發放)
+crawl 除權息一覽 (但這個資料看起來不太有用，除了日期)
 
 https://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT=全部&INDUSTRY_CAT=全部&YEAR=2017
 
@@ -27,7 +27,6 @@ def fetch(year):
     
     url = "https://goodinfo.tw/StockInfo/StockDividendScheduleList.asp?MARKET_CAT={}&INDUSTRY_CAT={}&YEAR={}".format("全部", "全部", year)
     
-#     url = "https://goodinfo.tw/StockInfo/StockDividendPolicyList.asp?"
     print(url)
 
 # Pandas 這樣的寫法是可以了，但資料看起來超亂，應該是我不會用，還是先用 BeautifulSoup 就好了

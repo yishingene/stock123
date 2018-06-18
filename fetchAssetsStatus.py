@@ -30,14 +30,14 @@ def main():
         
         stockId = name.split(".")[0]
         
-        if stockId.startswith("0"):
-            print("0 開頭我先跳過")
-            continue
+#         if stockId.startswith("0"):
+#             print("0 開頭我先跳過")
+#             continue
         
         fetchStockAssetsStatusWithRetry(stockId)
 
-        print("sleep 10 seconds then start...")
-        time.sleep(6)
+        print("sleep x seconds then start...")
+        time.sleep(5)
         
         
 def fetchStockAssetsStatusWithRetry(stockId, retry=2):

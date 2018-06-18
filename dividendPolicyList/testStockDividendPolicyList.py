@@ -5,7 +5,6 @@ Created on 2018年6月8日
 import requests
 from bs4 import BeautifulSoup
 import re, csv
-from matplotlib.mlab import csv2rec
 
 def main():
     fetch()

@@ -9,14 +9,14 @@ Created on 2018年4月8日
 from testStockAssetsStatus import fetchStockAssetsStatus
 from testStockBzPerformance import fetchStockBzPerformance
  
-stockId = "1264"
+stockId = "2382"
  
 longTermDebit = fetchStockAssetsStatus(stockId)
 pureEarn = fetchStockBzPerformance(stockId)
   
 rate = round(longTermDebit / pureEarn, 2)
   
-print(longTermDebit, pureEarn, rate)
+print("長期負債: {}, 盈收: {}, 比例: {}".format(longTermDebit, pureEarn, rate))
 
 
 # import os
@@ -37,12 +37,3 @@ print(longTermDebit, pureEarn, rate)
 #         row = list(csv.reader(f1))[0]
 #         print(row[18])
         
-    
-    
-    
-    
-    
-
-
-
-

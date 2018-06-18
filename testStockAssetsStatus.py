@@ -1,7 +1,7 @@
 '''
 抓取長期負債金額
 
-網址 https://goodinfo.tw/StockInfo/StockAssetsStatus.asp?STOCK_ID=1264
+https://goodinfo.tw/StockInfo/StockAssetsStatus.asp?STOCK_ID=1264
 但還需下拉至「資產負債金額」 
 
 Created on 2018年4月8日
@@ -48,7 +48,6 @@ def fetchStockAssetsStatus(stockId):
     trList = soup.findAll("tr", id=re.compile("^row")) 
     
     longTermDebit = trList[0].findAll("td")[18].text.strip().replace(",", "")
-    print(longTermDebit)
     
     return float(longTermDebit)
 

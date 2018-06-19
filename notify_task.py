@@ -29,8 +29,8 @@ def main():
     yestPrice = float(row[6]) - float(row[7])
     pct = round(float(row[7]) / yestPrice * 100, 2)
     
-    msg = "\n{} 大盤指數 {} {} ({:.2f}%) K 值 {}".format(row[0], row[6], row[7], pct, row[10])
-    msg += "\n\n"
+    msg = "{} 大盤 K 值 {}\n\n大盤指數 {} {} ({:.2f}%)".format(row[0], row[10], row[6], row[7], pct)
+    msg += "\n"
     msg += composeMsg("0050")
     msg += "\n"
     msg += composeMsg("0056")

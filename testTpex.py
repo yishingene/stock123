@@ -22,9 +22,12 @@ s.get("http://mis.twse.com.tw/stock/index.jsp")
 #url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
 # url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_{stockId}.tw&_={time}".format(stockId=stockId, time=int(time.time()) * 1000)
 
-url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_4205.tw&_={}".format(int(time.time()) * 1000)
+#url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=otc_4205.tw|otc_1264.tw&_={}".format(int(time.time()) * 1000)
+
+#url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0&_={}&ex_ch=tse_1101.tw|tse_1232.tw".format(int(time.time()) * 1000)
+url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0&_={}&ex_ch=tse_1101.tw||tse_1232.tw".format(int(time.time()*1000)+1000000)
 
 print("\nGET %s" %(url))
 r = s.get(url)
-
-print(r.text)
+print("[" + r.text.strip() + "]")
+# print(r.json())

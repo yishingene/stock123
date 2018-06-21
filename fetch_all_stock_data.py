@@ -9,6 +9,9 @@ import datetime
 import time
 
 import sys
+import traceback
+import lineTool
+import os
 sys.path.append("/data/data/com.termux/files/home/stock123")
 
 def main():
@@ -32,5 +35,9 @@ def main():
     
     
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        traceback.print_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetch_all_stock_data 發生錯誤")
 

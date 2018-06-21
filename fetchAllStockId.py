@@ -6,10 +6,15 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import time
+import lineTool
+import os
+import traceback
 
 rowList = []
 
 def main():
+    
+    print("fetch all stockids begin")
     
     try:
         url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=2'
@@ -61,4 +66,8 @@ def fetch(url):
 
 
 if __name__ == '__main__':
-    main()        
+    try:
+        main()
+    except Exception as e:
+        traceback.print_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchAllStockId fail")

@@ -5,15 +5,30 @@ Created on 2018年4月18日
 import requests
 from bs4 import BeautifulSoup
 import csv
+import time
 
 rowList = []
 
 def main():
-    url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=2'
-    fetch(url)
+    
+    try:
+        url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=2'
+        fetch(url)
+    except:
+        print("fetch again 1")
+        time.sleep(5)
+        fetch(url)
+        
     print(len(rowList))
-    url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=4'
-    fetch(url)
+    
+    try:
+        url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=4'
+        fetch(url)
+    except:
+        print("fetch again 2")
+        time.sleep(5)
+        fetch(url)
+    
     print(len(rowList))
     
     with open("stockIds.csv", "w", newline="", encoding="utf-8") as f1:

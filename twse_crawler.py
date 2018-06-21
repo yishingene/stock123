@@ -3,6 +3,7 @@ import datetime
 import csv
 import os
 import lineTool
+from pip._vendor.pyparsing import line
 
 
 class TWSECrawler():
@@ -162,7 +163,10 @@ class TWSECrawler():
         if js.get("stat") != "OK":
             print("%s 查無資料" %(dt.strftime("%Y%m%d")))
             return
-            
+        
+        # 因為有 K 值要處理，不能只抓存單一值，必須從頭開始存起，改通知我自己，有新的代號要處理歷史資料
+        newStockIdList = []    
+        
         for data in js.get("data5"):
             
             stockId = data[0]
@@ -180,6 +184,7 @@ class TWSECrawler():
 #                     writer = csv.writer(f1)
 #                     writer.writerow(["日期","成交股數","成交金額","開盤價","最高價","最低價","收盤價","漲跌價差","成交筆數","RSV","K9"])
                 # 先略過，不處理，之後再處理這些新的
+                newStockIdList.append(stockId)
                 continue
             
             # 讀出舊的資料
@@ -201,6 +206,8 @@ class TWSECrawler():
                       
             self.appendDataByRowList(stockId, rowDict)
                       
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], newStockIdList)
+        
 #             with open("data/{}.csv".format(stockId), "w", newline="", encoding="MS950") as f1:
 #                 writer = csv.writer(f1)
 #                 for d in rowDict.values():

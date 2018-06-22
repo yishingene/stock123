@@ -23,7 +23,7 @@ def main():
         with open(name, "r") as f1:
             rowList = list(csv.reader(f1))
         
-        # 先取最新月份 (第一行)，若沒資料再取次月，最多取到次次月
+        # 連讀三行，避開 0050 之類沒資料的
         row = rowList[0]
         if row[17] == '-':
             row = rowList[1]
@@ -32,12 +32,15 @@ def main():
         if row[17] == '-':
             continue
         
-        amt = int(row[17].replace(",", ""))
-        
-        if amt > 0 or amt < 0: 
+        try:
+            amt1 = int(rowList[1][17].replace(",", ""))
+            amt2 = int(rowList[2][17].replace(",", ""))
+            amt3 = int(rowList[3][17].replace(",", ""))
+        except:
+            print(name)
+            print(row)
             
-            if amt < 1000:
-                continue
+        if amt1 > 0 and amt2 > 0: 
             
             stockId = name.split(".")[0].split("_")[1]
             stockName = stockIdNameMap.get(stockId)

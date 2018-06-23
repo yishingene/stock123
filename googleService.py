@@ -13,6 +13,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 import time
+import ssl
 
 try:
     import argparse
@@ -51,7 +52,13 @@ class GooglesheetService():
         credentials = self.get_credentials()
         http = credentials.authorize(httplib2.Http())
         discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
-        self.service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
+        
+        try:
+            self.service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
+        except ssl.SSLEOFError as e:
+            print("ssl.SSLEOFError occur, try again")
+            time.sleep(5)
+            self.service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
         
     def get_credentials(self):

@@ -96,7 +96,6 @@ def processSheet(sheetId, sheetName, notifyLineToken):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
                 value[10] = datetime.datetime.now().strftime('%Y%m%d')
         
-        print(value)
         if stockIdMap[value[0]] == "上櫃":
 #             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
 #             value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
@@ -120,7 +119,6 @@ def processSheet(sheetId, sheetName, notifyLineToken):
     if msg != '':
         print("notify msg => {}".format(msg), flush=True)
         lineTool.lineNotify(notifyLineToken, msg)
-        time.sleep(1)
         
     
 if __name__ == "__main__":

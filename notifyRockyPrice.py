@@ -29,6 +29,7 @@ def main():
     for sheetData in sheetDataList:
         print("處理 {} 資料 {}/{}, Token: {}".format(sheetData[0], sheetData[1], sheetData[3], sheetData[2]), flush=True)
         processSheet(sheetData[1], sheetData[3], sheetData[2])
+        time.sleep(0.5)
  
     print('執行完畢')
 

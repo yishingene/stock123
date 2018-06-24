@@ -149,8 +149,8 @@ def updateSheet(sheetId, sheetName):
             value[10] = datetime.datetime.now().strftime('%m%d %H:%M:%S') + " OTC Updated"
             continue # header 不繼續下面的邏輯
         
-        if len(value) == 0:
-            continue # 略過空白行
+        if len(value) == 0 or value[0] == '':
+            continue # 略過空白行，或後面有東西，但前面連代號都沒有的
 
         if stockIdMap[value[0]] == "上櫃":
             row = stockDataMap[value[0]]

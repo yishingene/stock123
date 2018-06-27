@@ -131,6 +131,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
 if __name__ == "__main__":
     try:
         main()
-    except Exception as e:
+    except:
         traceback.print_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "notifyRockyPrice 發生錯誤")
+        msg = traceback.format_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)

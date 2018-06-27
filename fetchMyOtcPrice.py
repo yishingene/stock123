@@ -178,6 +178,7 @@ def updateSheet(sheetId, sheetName):
 if __name__ == "__main__":
     try:
         main()
-    except Exception as e:
+    except:
         traceback.print_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchMyOtcPrice 發生錯誤")
+        msg = traceback.format_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)

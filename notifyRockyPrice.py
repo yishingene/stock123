@@ -64,7 +64,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
     msg = ""
     for value in googlesheetService.getValues(sheetName):
         rowNum += 1
-        rowList.append(value)
+        rowList.append(value) # 之後資料要回寫回 sheet
         
         # header
         if rowNum == 1:
@@ -89,6 +89,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
             nowPrice = float(value[4].replace(",", ""))
         except:
             print("something wrong", value[4])
+            print(value)
             nowPrice = 5000.0
 
         wantPrice = value[2]
@@ -99,7 +100,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
                 msg += "\n{} ({}) 買進價 {}，現價 {}，PE: {}，買進原因： {}\n".format(value[1], value[0], value[2], value[4], value[8], value[9])
                 value[10] = datetime.datetime.now().strftime('%Y%m%d')
         
-        if stockIdMap[value[0]] == "上櫃":
+        if stockIdMap.get(value[0], "") == "上櫃":
 #             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
 #             value[4] = '=IFERROR(ARRAY_CONSTRAIN(importXML(CONCATENATE("http://m.wantgoo.com/s/", $A{}),"//*/div[2]/div/div[1]"),1,1))'.format(rowNum)
 #             value[5] = 'N/A'
@@ -108,13 +109,16 @@ def processSheet(sheetId, sheetName, notifyLineToken):
 #             value[8] = 'N/A'
 #             print("上櫃資料改由別隻處理")
             pass
-        else:
+        elif stockIdMap.get(value[0], "") == "上市":
             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
             value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)
             value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "volume") / 1000'.format(rowNum)
             value[8] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
+        elif stockIdMap.get(value[0], "") == "":
+            print("{} 非上市上櫃不支援".format(value[0]))
+            lineTool.lineNotify(notifyLineToken, "{} 非上市上櫃目前不支援".format(value[0]))
 
     # 其實應該只要更新時間欄位就好，其他欄位不要再更新，但我懶的再改了，之後再說
     googlesheetService.updateSheet(sheetName, rowList)

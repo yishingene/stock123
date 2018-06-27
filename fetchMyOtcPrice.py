@@ -35,11 +35,11 @@ def main():
     for sheetData in sheetDataList:
         print("抓取 {} 的上櫃的代號 {}/{}".format(sheetData[0], sheetData[1], sheetData[3]), flush=True)
         try:
-            fetchOtcStockIdFormSheet(sheetData[1], sheetData[3])
+            fetchOtcStockIdFormSheet(sheetData[1], sheetData[3], sheetData[2])
         except:
             print("抓取失敗，重試一次")
             time.sleep(2)
-            fetchOtcStockIdFormSheet(sheetData[1], sheetData[3])
+            fetchOtcStockIdFormSheet(sheetData[1], sheetData[3], sheetData[2])
         
         time.sleep(1)
     
@@ -76,7 +76,7 @@ def fetchAllSheetDataListFromMyGooglehseet():
     return sheetDataList
 
 
-def fetchOtcStockIdFormSheet(sheetId, sheetName):
+def fetchOtcStockIdFormSheet(sheetId, sheetName, token):
 
     googlesheetService = GooglesheetService(sheetId)
     
@@ -92,9 +92,11 @@ def fetchOtcStockIdFormSheet(sheetId, sheetName):
         if value[0] == '':
             continue # 連股票代號都沒有的，略過
 
-        if stockIdMap[value[0]] == "上櫃":
+        if stockIdMap.get(value[0], "") == "上櫃":
             stockDataMap[value[0]] = None # 本來是想放名稱，但這裡沒有
-
+        elif stockIdMap.get(value[0], "") == "":
+            print("{} 非上市上櫃目前不支援".format(value[0]))
+            lineTool.lineNotify(token, "{} 非上市上櫃目前不支援".format(value[0]))
 
 def fecthOtcStockPrice():
     cnt = 0
@@ -152,7 +154,7 @@ def updateSheet(sheetId, sheetName):
         if len(value) == 0 or value[0] == '':
             continue # 略過空白行，或後面有東西，但前面連代號都沒有的
 
-        if stockIdMap[value[0]] == "上櫃":
+        if stockIdMap.get(value[0], "") == "上櫃":
             row = stockDataMap[value[0]]
             if row != None:
                 value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
@@ -160,14 +162,16 @@ def updateSheet(sheetId, sheetName):
                 value[5] = row[3] # 漲跌
                 value[6] = row[4] # 漲跌幅度
                 value[7] = row[5] # 成交量
-        else:
+        elif stockIdMap.get(value[0], "") == "上市":
             value[3] = '=(E{}-C{})/C{}'.format(rowNum, rowNum, rowNum)
             value[4] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "price")'.format(rowNum)
             value[5] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "change")'.format(rowNum)
             value[6] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "changepct") / 100'.format(rowNum)
             value[7] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "volume") / 1000'.format(rowNum)
             value[8] = '=GOOGLEFINANCE(CONCATENATE("TPE:", $A{}), "pe")'.format(rowNum)
-                
+        if stockIdMap.get(value[0], "") == "":
+            print("not support {}".format(value[0]))
+            
     googlesheetService.updateSheet(sheetName, rowList)
 
         

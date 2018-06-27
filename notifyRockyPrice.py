@@ -68,6 +68,8 @@ def processSheet(sheetId, sheetName, notifyLineToken):
         
         # header
         if rowNum == 1:
+            if len(value) <= 10:
+                value.append("") 
             columnNum = len(value) # 取 header 的總 column 數
             value[10] = datetime.datetime.now().strftime('%m%d %H:%M:%S')
             continue # header 不繼續下面的邏輯
@@ -84,7 +86,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
 
         # 開始比價
         try:
-            nowPrice = float(value[4])
+            nowPrice = float(value[4].replace(",", ""))
         except:
             print("something wrong", value[4])
             nowPrice = 5000.0

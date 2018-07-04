@@ -1,6 +1,8 @@
 '''
 董監外資持股每月明細
 
+https://goodinfo.tw/StockInfo/StockDirectorSharehold.asp?STOCK_ID=6024
+
 Created on 2018年6月6日
 @author: Rocky
 '''
@@ -15,9 +17,8 @@ folderPath = "stockDirectorSharehold"
 
 def main():
     
-#     stockId = "6024"
-#     fetch(stockId)
-#     readFile(stockId)
+    stockId = "1215"
+    fetch(stockId)
 
     # 用來比對已經執行過的，不再重新執行
     existList = []

@@ -10,43 +10,57 @@ import lineTool
 import os
 import traceback
 
-rowList = []
 
 def main():
     
-    print("fetch all stockids begin")
+    rowList = []
     
-    try:
-        url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=2'
-        fetch(url)
-    except:
-        print("fetch again 1")
-        time.sleep(5)
-        fetch(url)
-        
-    print(len(rowList))
+    url = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
+    rList = fetch(url)
+    rowList.extend(rList)
+    print("上市數量 {}".format(len(rList)))
+    time.sleep(3) # 實測連抓四個不會被擋，但還是保守起見
     
-    try:
-        url = 'http://isin.twse.com.tw/isin/C_public.jsp?strMode=4'
-        fetch(url)
-    except:
-        print("fetch again 2")
-        time.sleep(5)
-        fetch(url)
+    url = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
+    rList = fetch(url)
+    rowList.extend(rList)
+    print("上櫃數量 {}".format(len(rList)))
+    time.sleep(3) # 實測連抓四個不會被擋，但還是保守起見
     
-    print(len(rowList))
+    url = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=5"
+    rList = fetch(url)
+    rowList.extend(rList)
+    print("興櫃數量 {}".format(len(rList)))
+    time.sleep(3) # 實測連抓四個不會被擋，但還是保守起見
+    
+    url = "http://isin.twse.com.tw/isin/C_public.jsp?strMode=1"
+    rList = fetch(url)
+    # 因為公開發行少了一個欄位，自己補上
+    for row in rList:
+        row.insert(4, "公開發行")
+    rowList.extend(rList)
+    print("公開發行 {}".format(len(rList)))
+    time.sleep(3) # 實測連抓四個不會被擋，但還是保守起見
     
     with open("stockIds.csv", "w", newline="", encoding="utf-8") as f1:
         for row in rowList:
             csv.writer(f1).writerow(row)
-
+    
+    print("completed")
 
 def fetch(url):
 
-    resp = requests.get(url)
+    print("fetch " + url)
+    try:
+        resp = requests.get(url)
+    except:
+        print("fetch again " + url)
+        time.sleep(5)
+        resp = requests.get(url)
     
     soup = BeautifulSoup(resp.text, "html.parser")
     
+    rowList = []
     for tr in soup.find("table", {"class": "h4"}).findAll("tr"):
         tdList = tr.findAll("td")
         # 過濾掉不是明細的 tr
@@ -63,6 +77,8 @@ def fetch(url):
         
         row = [sid, sname, isinCode, onDate, marketType, saleCode, cfiCode]
         rowList.append(row)
+    
+    return rowList
 
 
 if __name__ == '__main__':
@@ -70,4 +86,5 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         traceback.print_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchAllStockId fail")
+        msg = traceback.format_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)

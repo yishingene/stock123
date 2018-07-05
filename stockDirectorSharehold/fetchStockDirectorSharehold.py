@@ -17,8 +17,8 @@ folderPath = "stockDirectorSharehold"
 
 def main():
     
-    stockId = "1215"
-    fetch(stockId)
+#     stockId = "1215"
+#     fetch(stockId)
 
     # 用來比對已經執行過的，不再重新執行
     existList = []

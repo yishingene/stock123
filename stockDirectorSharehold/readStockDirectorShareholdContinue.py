@@ -32,6 +32,7 @@ def main():
         if row[17] == '-':
             continue
         
+        amt1 = 0
         try:
             amt1 = int(rowList[1][17].replace(",", ""))
             amt2 = int(rowList[2][17].replace(",", ""))
@@ -40,7 +41,7 @@ def main():
             print(name)
             print(row)
             
-        if amt1 > 0 and amt2 > 0: 
+        if amt1 > 0 and amt2 > 0 and amt3 > 0: 
             
             stockId = name.split(".")[0].split("_")[1]
             stockName = stockIdNameMap.get(stockId)

@@ -26,19 +26,25 @@ def main():
 
     sheetDataList = fetchAllSheetDataListFromMyGooglehseet()
     
+    cnt = 0
     for sheetData in sheetDataList:
-        print("處理 {} 資料 {}/{}, Token: {}".format(sheetData[0], sheetData[1], sheetData[3], sheetData[2]), flush=True)
+        cnt += 1
+        print("處理 {} {} 資料 {}/{}, Token: {}".format(cnt, sheetData[0], sheetData[1], sheetData[3], sheetData[2]), flush=True)
         processSheet(sheetData[1], sheetData[3], sheetData[2])
-        time.sleep(0.5)
+        time.sleep(1)
  
     print('執行完畢')
 
 
 
+'''
+從我的 Google Sheet 抓取要掃的清單
+'''
 def fetchAllSheetDataListFromMyGooglehseet():
     
     googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
     rowList = googlesheetService.getValues("掃描清單")
+#     rowList = googlesheetService.getValues("測試掃描清單")
     rowNum = 0
     sheetDataList = []
     for row in rowList:

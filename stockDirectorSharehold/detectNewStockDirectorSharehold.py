@@ -11,10 +11,9 @@ import re
 import datetime
 import os
 import time
-from matplotlib.mlab import csv2rec
-from future.backports.http.client import LineTooLong
 import lineTool
 import traceback
+from twisted.words.protocols.irc import fileSize
 def main():
     
     print("# -------------------------- #\n# 執行時間 {} #\n# -------------------------- #".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
@@ -23,16 +22,18 @@ def main():
 #     fetch(sid)
 #     detect(sid)
     cnt = 0
-    for name in os.listdir("../data"):
-        
+    nameList = os.listdir("../data")
+    fileNum = len(nameList)
+    for name in nameList:
+
+        cnt += 1
+        print("process {} of {} files...".format(cnt, fileNum))
+                 
         stockId = name.split(".")[0]
         
         if stockId == "t00" or stockId.startswith("0"):
             print("跳過 t00 與 0 開頭代號不需查詢", stockId)
             continue
-
-        cnt += 1 
-        print(cnt)
         
         try:
             fetch(stockId)
@@ -71,7 +72,7 @@ def main():
     print(code)
     
     os.remove("changeList.csv")
-    print("completed.")
+    print("執行完成，時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
 
 def detect(sid):
     
@@ -149,4 +150,11 @@ def fetch(stockId):
         cw.writerows(rowList)
 
 if __name__ == "__main__":
-    main()
+    
+    try:
+        main()
+    except:
+        traceback.print_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "偵測董監持股程式異常中止")
+            
+        

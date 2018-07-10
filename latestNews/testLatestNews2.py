@@ -8,8 +8,7 @@ import requests
 import time 
 import re 
 from bs4 import BeautifulSoup
-import lineTool
-import os
+import csv
 
 def getPostValus(txt, key, default = '') :
 
@@ -34,6 +33,7 @@ def fetch():
     
     table = soup.find("table", {"class": "hasBorder"})
     
+    rowList = []
     for tr in table.findAll("tr"):
         if tr.get("class")[0] == 'tblHead':
             continue
@@ -42,7 +42,11 @@ def fetch():
         
         sid = tds[0].text
         sname = tds[1].text
+        sdate = tds[2].text
+        stime = tds[3].text
         title = tds[4].text
+        
+        print(sid, sname, sdate, stime, title)
 
         txt = tds[5].find('input')
 
@@ -64,19 +68,20 @@ def fetch():
                 'SEQ_NO' : getPostValus(txt.get('onclick'), 'SEQ_NO' ),
         }
 
-#         print(postData)
-
         r = requests.post(post_url, data = postData, headers = headers)
         r.encoding = "utf-8"
 
         soup = BeautifulSoup(r.text, "html.parser")
         td = soup.find("td", {"style": "!important;text-align:left; !important;"})
         print(td.text)
-
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], td.text)
-
-#        print(sid, sname, title)
         
-        break
+        row = [sid, sname, sdate, stime, title, td.text]
+        rowList.append(row)
+        
+        time.sleep(3)
     
+    with open("news.csv", "w", encoding="utf-8", newline="") as f1:
+        writer = csv.writer(f1)
+        writer.writerows(rowList)    
+        
 fetch()

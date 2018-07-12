@@ -159,7 +159,13 @@ class GooglesheetService():
     
     def getValues(self, rangeName):
         self.checkQuota()
-        result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
+        try:
+            result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
+        except:
+            print("cannot read spreadsheet values, sleep and try again")
+            time.sleep(60)
+            result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
+            
         return result.get('values', [])
     
     

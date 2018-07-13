@@ -90,7 +90,10 @@ def fetchDetail(onclickValue):
     
     soup = BeautifulSoup(r.text, "html.parser")
     td = soup.find("td", {"style": "!important;text-align:left; !important;"})
-    return td.text
+    try:
+        return td.text
+    except:
+        return ""
 
 def processNotifyNews():
 

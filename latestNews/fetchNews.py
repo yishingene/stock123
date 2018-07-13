@@ -10,6 +10,8 @@ import lineTool
 import os
 import time
 from googleService import GooglesheetService
+import sys
+sys.path.append("/data/data/com.termux/files/home/stock123")
 
 
 def main():

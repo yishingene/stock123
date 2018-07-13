@@ -4,6 +4,7 @@ Created on 2018年7月10日
 '''
 import sys
 sys.path.append("/data/data/com.termux/files/home/stock123")
+sys.path.append("/data/data/com.termux/files/home/stock123/latestNews")
 
 import csv
 import requests

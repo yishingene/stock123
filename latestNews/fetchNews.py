@@ -2,6 +2,9 @@
 Created on 2018年7月10日
 @author: rocky.wang
 '''
+import sys
+sys.path.append("/data/data/com.termux/files/home/stock123")
+
 import csv
 import requests
 from bs4 import BeautifulSoup
@@ -10,9 +13,6 @@ import lineTool
 import os
 import time
 from googleService import GooglesheetService
-import sys
-sys.path.append("/data/data/com.termux/files/home/stock123")
-sys.path.append("/data/data/com.termux/files/home/stock123/latestNews")
 
 
 def main():

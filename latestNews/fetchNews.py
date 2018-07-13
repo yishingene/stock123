@@ -12,6 +12,7 @@ import time
 from googleService import GooglesheetService
 import sys
 sys.path.append("/data/data/com.termux/files/home/stock123")
+sys.path.append("/data/data/com.termux/files/home/stock123/latestNews")
 
 
 def main():

@@ -8,20 +8,6 @@ import requests
 import time 
 import re 
 from bs4 import BeautifulSoup
-import csv
-
-def getPostValus(txt, key, default = '') :
-
-    for row in txt.split(';'):
-
-        mo = re.match('^document\.(.*)\.(.*).value=\'(.*)\'$', row.strip())
-
-        if not mo : 
-            return default
-        if mo.group(2) == key : 
-            return mo.group(3)
-
-    return default 
 
 
 def fetch():
@@ -48,34 +34,33 @@ def fetch():
         
 #         print(sid, sname, sdate, stime, title)
 
-        detailUrl = "http://mops.twse.com.tw/mops/web/ajax_t05sr01_1"
-        postData = composePostData(tds[5].find('input').get("onclick"))
-        
-        r = requests.post(detailUrl, data = postData)
-        r.encoding = "utf-8"
- 
-        soup = BeautifulSoup(r.text, "html.parser")
-        td = soup.find("td", {"style": "!important;text-align:left; !important;"})
-        print(td.text)
+        content = fetchDetail(tds[5].find('input').get("onclick"))
          
-        row = [sid, sname, sdate, stime, title, td.text]
+        row = [sid, sname, sdate, stime, title, content]
         rowList.append(row)
-    
-        break
-
-def composePostData(onclickValue):
-    
-    postData = {
-        'TYPEK' : 'all', 
-        'step' : '1'
-    }
         
+        print(row)
+    
+        break # 只找一筆明細就停，很重要，不然要 sleep，否則會超過
+
+def fetchDetail(onclickValue):
+    
+    postData = { 'TYPEK' : 'all', 'step' : '1' }
+    
     for co in onclickValue.split(";"):
         if not co.startswith("document.fm_t05sr01_1"):
             continue
         co = co.replace("document.fm_t05sr01_1.", "").replace(".value", "").replace("'", "")
         postData[co.split("=")[0]] = co.split("=")[1]
+
+    url = "http://mops.twse.com.tw/mops/web/ajax_t05sr01_1"
+        
+    r = requests.post(url, data = postData)
+    r.encoding = "utf-8"
     
-    return postData
+    soup = BeautifulSoup(r.text, "html.parser")
+    td = soup.find("td", {"style": "!important;text-align:left; !important;"})
+    return td.text
+    
     
 fetch()

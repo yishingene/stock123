@@ -13,7 +13,8 @@ import os
 import time
 import lineTool
 import traceback
-from twisted.words.protocols.irc import fileSize
+
+
 def main():
     
     print("# -------------------------- #\n# 執行時間 {} #\n# -------------------------- #".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))

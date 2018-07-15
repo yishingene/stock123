@@ -25,8 +25,13 @@ def main():
             key = csvRow[0] + csvRow[1] + csvRow[2] + csvRow[3] + csvRow[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
             keyExistList.append(key)
     
+    rowList = fetchNewsList()
+    if len(rowList) == 0:
+        print("no data found, stop to run")
+        return
+    
     # 抓取最新資料
-    for row in fetchNewsList():
+    for row in rowList:
         key = row[0] + row[1] + row[2] + row[3] + row[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
         if key in keyExistList:
             continue
@@ -52,6 +57,10 @@ def fetchNewsList():
     r.encoding = "utf-8"
     
     soup = BeautifulSoup(r.text, "html.parser")
+    
+    tb = soup.find("table", {"class": "hasBorder"})
+    if tb == None and "資料庫中查無需求資料" in r.text:
+        return []
     
     rowList = []
     for tr in soup.find("table", {"class": "hasBorder"}).findAll("tr"):

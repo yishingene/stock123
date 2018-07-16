@@ -22,7 +22,7 @@ for row in rowList:
 
 
 def main():
-    print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m%d %H:%M:%S')))
+    print("執行時間 {}".format(datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
 
     sheetDataList = fetchAllSheetDataListFromMyGooglehseet()
     

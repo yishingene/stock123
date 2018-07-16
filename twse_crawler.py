@@ -3,7 +3,6 @@ import datetime
 import csv
 import os
 import lineTool
-from pip._vendor.pyparsing import line
 
 
 class TWSECrawler():

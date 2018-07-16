@@ -21,9 +21,6 @@ for name in os.listdir():
                 if row[0] != '上市':
                     continue
                 
-                if int(row[3]) <= 2010:
-                    continue
-                
                 stockId = row[1]
                 stockData = allDataDict.get(stockId, None)
                 if stockData == None:

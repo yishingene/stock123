@@ -12,6 +12,8 @@ import re
 import csv
 import time
 import os
+import traceback
+import lineTool
 
 folderPath = "stockDirectorSharehold"
 
@@ -49,8 +51,6 @@ def main():
  
         print("sleep x seconds then start...")
         time.sleep(5)
-
-
 
     
 def fetch(stockId):
@@ -93,5 +93,9 @@ def fetch(stockId):
     
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        traceback.print_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchStockDirectorSharehold error")
     

@@ -15,6 +15,9 @@ import os
 import time
 from googleService import GooglesheetService
 
+def main1():
+    googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
+    rowList = googlesheetService.getValues("新聞通知清單1")
 
 def main():
     
@@ -25,18 +28,18 @@ def main():
             key = csvRow[0] + csvRow[1] + csvRow[2] + csvRow[3] + csvRow[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
             keyExistList.append(key)
     
+    # 抓取最新消息資料
     rowList = fetchNewsList()
     if len(rowList) == 0:
         print("no data found, stop to run")
         return
     
-    # 抓取最新資料
     for row in rowList:
         key = row[0] + row[1] + row[2] + row[3] + row[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
         if key in keyExistList:
             continue
         
-        # 抓取明細資料
+        # 抓取每則消息的內容明細資料
         content = fetchDetail(row[5])
         row[5] = content # 把 onclickValue 替換成 content
         print(row)
@@ -47,7 +50,6 @@ def main():
     with open("news.csv", "w", encoding="utf-8", newline="") as f1:
         csv.writer(f1).writerows(csvRowList)
         
-    
     processNotifyNews()
         
 
@@ -106,6 +108,8 @@ def fetchDetail(onclickValue):
 
 def processNotifyNews():
 
+    sheetDataList = fetchAllSheetDataListFromMyGooglehseet()
+
     notifySidList = []
     # maybe fetch googlesheet
     googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
@@ -130,7 +134,31 @@ def processNotifyNews():
 
     # 寫回 csv 檔
     with open("news.csv", "w", encoding="utf-8", newline="") as f1:
-        csv.writer(f1).writerows(csvRowList)    
+        csv.writer(f1).writerows(csvRowList)
+
+
+'''
+從我的 Google Sheet 抓取要掃的清單
+'''
+def fetchAllSheetDataListFromMyGooglehseet():
+    
+    googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
+    rowList = googlesheetService.getValues("掃描清單")
+    rowNum = 0
+    sheetDataList = []
+    for row in rowList:
+        rowNum += 1
+        if rowNum == 1:
+            continue
+        if len(row) == 0 or row[0] == '' and row[1] == '':
+            continue # 略過空白行
+        
+        sheetId = row[1].replace("https://docs.google.com/spreadsheets/d/", "").split("/")[0]
+        # name, sheetId, token, rangeName
+        sheetDataList.append([row[0], sheetId, row[2], row[3]])
+        
+    return sheetDataList
+
 
 if __name__ == "__main__":
     try:

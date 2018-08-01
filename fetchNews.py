@@ -165,13 +165,18 @@ def processNotifyNews():
                 continue
             
             msg = "{} {} {} {} {}\n\n{}".format(csvRow[0], csvRow[1], csvRow[2], csvRow[3], csvRow[4], csvRow[5])
+            print("process notify...")
+            print(msg)
             if csvRow[0] in notifySidList:
+                print("notify me")
                 lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
                 
             if csvRow[0] in pingNotifySidList:
+                print("notify ping")
                 lineTool.lineNotify(os.environ["LINE_PING_TOKEN"], msg)
             
             if csvRow[0] in sharonNotifySidList:
+                print("notify sharon")
                 lineTool.lineNotify(os.environ["LINE_SHARON_TOKEN"], msg)
                 
             csvRow[6] = "Done"

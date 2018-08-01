@@ -139,7 +139,6 @@ def processNotifyNews():
     
     # 平大
     time.sleep(2)
-    # 1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc    H3QGWY5wYUGZ1t8cpxLnVe13QUTKNcwyznkQUbQgV3m
     googlesheetService = GooglesheetService("1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc")
     pingRowList = googlesheetService.getValues("新聞通知清單")
     for row in pingRowList:

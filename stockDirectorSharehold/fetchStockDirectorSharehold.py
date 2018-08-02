@@ -14,6 +14,7 @@ import time
 import os
 import traceback
 import lineTool
+from warnings import catch_warnings
 
 folderPath = "stockDirectorSharehold"
 
@@ -45,12 +46,15 @@ def main():
 #             print("先跳過", stockId)
 #             continue
         
-        cnt += 1 
-        print(cnt)
-        fetch(stockId)
+        try:
+            fetch(stockId)
+        except Exception as e:
+            print(e)
+            time.sleep(120)
+            fetch(stockId)
  
         print("sleep x seconds then start...")
-        time.sleep(5)
+        time.sleep(10)
 
     
 def fetch(stockId):
@@ -73,29 +77,19 @@ def fetch(stockId):
         row = []
         for td in tr.findAll("td"):
             row.append(td.text)
-#         print(row)
         rowList.append(row)
             
     with open("StockDirectorSharehold_{}.csv".format(stockId), "w", encoding="utf-8", newline="") as f1:
         cw = csv.writer(f1)
         cw.writerows(rowList)
         
-# def readFile(stockId):
-#     
-#     with open("StockDirectorSharehold_{}.csv".format(stockId), "r", encoding="utf-8", newline="") as f1:
-#        rowList = list(csv.reader(f1))
-#        
-#     for row in rowList:
-#         
-#         if int(row[0].split("/")[0]) >= 2016:
-#             print(row[0], row[12], row[13], row[14], row[15], row[16])
-# #             print(row[0], row[7], row[8], row[9], row[10], row[11])
-    
-
+        
 if __name__ == "__main__":
     try:
         main()
-    except:
+    except Exception as e:
+        print(e)
         traceback.print_exc()
         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchStockDirectorSharehold error")
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], e)
     

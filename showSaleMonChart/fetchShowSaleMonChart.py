@@ -10,6 +10,8 @@ import re
 import csv
 import time
 import os
+import lineTool
+import traceback
 
 
 def main():
@@ -23,30 +25,28 @@ def main():
     for name in os.listdir():
         if name.startswith("ShowSaleMonChart_"):
             stockId = name.split(".")[0].split("_")[1]
-            print("append exist stockId ", stockId)
             existList.append(stockId)
      
-    cnt = 0
     for name in os.listdir("../data"):
-        if name == "t00.csv":
-            continue
          
         stockId = name.split(".")[0]
- 
+        
+        if stockId.startswith("0") or stockId == "t00":
+            continue
+
+#         with open("ShowSaleMonChart_{}.csv".format(stockId), "r") as f1:
+#             row = list(csv.reader(f1))[0]
+        
+#         if row[0] == '2018/06':
+#             continue
+
         if stockId in existList:
-            print("已有資料，不再重新抓取", name)
             continue
          
-        if stockId.startswith("0"):
-            print("先跳過", stockId)
-            continue
-         
-        cnt += 1 
-        print(cnt)
         fetch(stockId)
   
         print("sleep x seconds then start...")
-        time.sleep(5)
+        time.sleep(10)
 
 
 
@@ -91,5 +91,9 @@ def fetch(stockId):
     
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        traceback.print_exc()
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchShowSaleMonChart error")
     

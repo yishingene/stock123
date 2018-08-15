@@ -117,7 +117,11 @@ def fecthOtcStockPrice():
             time.sleep(5)
             js = cr.crawlStockInfoOtc(stockId)
             print(js)
-         
+        
+        if len(js["msgArray"]) == 0:
+            time.sleep(5)
+            continue
+        
         name = js["msgArray"][0]["n"]
         nowPrice = js["msgArray"][0].get("z", "")
         yesPrice = js["msgArray"][0].get("y", "")

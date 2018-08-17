@@ -14,7 +14,6 @@ import time
 import os
 import traceback
 import lineTool
-from warnings import catch_warnings
 
 folderPath = "stockDirectorSharehold"
 

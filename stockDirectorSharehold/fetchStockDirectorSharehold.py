@@ -38,12 +38,10 @@ def main():
         stockId = name.split(".")[0]
 
         if stockId in existList:
-            print("已有資料，不再重新抓取", name)
             continue
         
-#         if stockId.startswith("0"):
-#             print("先跳過", stockId)
-#             continue
+        if stockId.startswith("0"):
+            continue
         
         try:
             fetch(stockId)

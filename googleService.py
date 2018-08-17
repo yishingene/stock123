@@ -14,6 +14,8 @@ from oauth2client import tools
 from oauth2client.file import Storage
 import time
 import ssl
+import traceback
+from googleapiclient.errors import HttpError
 
 try:
     import argparse
@@ -161,8 +163,10 @@ class GooglesheetService():
         self.checkQuota()
         try:
             result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
+#         except HttpError as e:
         except:
             print("cannot read spreadsheet values, sleep and try again")
+            traceback.print_exc()
             time.sleep(60)
             result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
             

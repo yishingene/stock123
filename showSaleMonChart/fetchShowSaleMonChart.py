@@ -43,7 +43,12 @@ def main():
         if stockId in existList:
             continue
          
-        fetch(stockId)
+        try:
+            fetch(stockId)
+        except Exception as e:
+            print(e)
+            time.sleep(120)
+            fetch(stockId)
   
         print("sleep x seconds then start...")
         time.sleep(10)

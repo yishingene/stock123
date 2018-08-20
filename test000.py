@@ -23,7 +23,9 @@ def fetch(price, sid):
     
     soup = BeautifulSoup(r.text, "html.parser")
     
-    elem = soup.find("table", {"class": "solid_1_padding_3_3_tbl"}).findAll("tr", {"height": "23px"})
+    tb = soup.find("table", {"class": "solid_1_padding_4_3_tbl"})
+    
+    elem = tb.findAll("tr", {"height": "23px"})
     
     cnt = 0
     num = 0
@@ -71,7 +73,7 @@ def calRate(price:float, m:float, s:float):
 
 if __name__ == "__main__":
 
-    sid = "8114"
+    sid = "6128"
 
     j = fetchStock(sid)
     print(j)

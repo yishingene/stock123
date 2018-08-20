@@ -30,7 +30,14 @@ def main():
     for sheetData in sheetDataList:
         cnt += 1
         print("處理 {} {} 資料 {}/{}, Token: {}".format(cnt, sheetData[0], sheetData[1], sheetData[3], sheetData[2]), flush=True)
-        processSheet(sheetData[1], sheetData[3], sheetData[2])
+        try:
+            processSheet(sheetData[1], sheetData[3], sheetData[2])
+        except Exception as e:
+            print(e)
+            print("sleep 3 minutes and try again")
+            time.sleep(180)
+            processSheet(sheetData[1], sheetData[3], sheetData[2])
+            
         time.sleep(1)
  
     print('執行完畢')
@@ -44,7 +51,7 @@ def fetchAllSheetDataListFromMyGooglehseet():
     
     googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
     rowList = googlesheetService.getValues("掃描清單")
-#     rowList = googlesheetService.getValues("測試掃描清單")
+    rowList = googlesheetService.getValues("測試掃描清單")
     rowNum = 0
     sheetDataList = []
     for row in rowList:
@@ -137,7 +144,7 @@ def processSheet(sheetId, sheetName, notifyLineToken):
 if __name__ == "__main__":
     try:
         main()
-    except:
+    except Exception as e:
         traceback.print_exc()
         msg = traceback.format_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], e)

@@ -9,6 +9,7 @@ Created on 2018年7月13日
 import time
 import requests
 import datetime
+import csv
 
 
 def fetch():
@@ -23,16 +24,17 @@ def fetch():
     print(js)
     
     dt = now.strftime('%Y/%m/%d')
-    print(dt)
-    cnt = 0
+    rowList = []
     for data in js["aaData"]:
-        cnt += 1
-        if cnt == 5:
-            break
-        print(data)
-        
+        rowList.append(data)
         # 日期,成交股數,成交金額,開盤價,最高價,最低價,收盤價,漲跌價差,成交筆數,RSV,K9
         row = [dt, data[8], data[9], data[4], data[5], data[6], data[2]]
+
+    with open("otc_{}.csv".format(now.strftime('%Y%m%d')), "w", encoding="utf-8", newline="") as f1:
+        writer = csv.writer(f1)
+        writer.writerows(rowList)
+        
+
 
 if __name__ == "__main__":
     fetch()

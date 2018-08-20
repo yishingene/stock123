@@ -267,6 +267,32 @@ class TWSECrawler():
                 writer.writerow(row)
 
 
+    '''
+    OTC 是一開始沒有想到的，那時太菜了，還不知道有分上市上櫃，目前的需求只是把每日收盤價格存下來後，可以供查詢就好，所以就不比照之前的處理方式了 
+    '''
+    def fetchOtcDailyCloseQuotes(self):
+    
+        now = datetime.datetime.now()
+        dt = str(int(now.strftime('%Y')) - 1911) + now.strftime('/%m/%d') # format example => 107/07/13 
+        url = "http://www.tpex.org.tw/web/stock/aftertrading/daily_close_quotes/stk_quote_result.php?l=zh-tw&d={}&_={}".format(dt, int(time.time() * 1000))
+        print(url)
+    
+        r = requests.get(url)
+        js = r.json()
+        print(js)
+        
+        dt = now.strftime('%Y/%m/%d')
+        rowList = []
+        for data in js["aaData"]:
+            rowList.append(data)
+            # 日期,成交股數,成交金額,開盤價,最高價,最低價,收盤價,漲跌價差,成交筆數,RSV,K9
+            row = [dt, data[8], data[9], data[4], data[5], data[6], data[2]]
+    
+        with open("data_daily_close_quotes/otc_{}.csv".format(now.strftime('%Y%m%d')), "w", encoding="utf-8", newline="") as f1:
+            csv.writer(f1).writerows(rowList)
+
+
+
 if __name__ == "__main__":
 
     # 若要指定日期
@@ -288,16 +314,12 @@ if __name__ == "__main__":
 #     print(name, openPrice, nowPrice, volume)
     
     # 測試上市即時資料
+#     cr = TWSECrawler()    
+#     js = cr.crawlStockInfo("t00")
+    
+    # 測試上櫃收盤資料
     cr = TWSECrawler()    
-    js = cr.crawlStockInfo("t00")
-    
-    
-    
-    
-    
-    
-    
-    
+    cr.fetchOtcDailyCloseQuotes()
     
     
     

@@ -25,7 +25,8 @@ def main():
     if int(str(now.hour) + format(now.minute, "02")) >= 1350:
         # 爬資料寫到各 csv 檔
         crawler.fetchAllStockFinalData()
-        
+        # 爬上櫃資料寫到每日 csv 檔
+        crawler.fetchOtcDailyCloseQuotes()
       
     # 爬大盤資料寫入 csv 檔
     crawler.fetchStockInfo("t00")

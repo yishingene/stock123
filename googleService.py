@@ -167,7 +167,7 @@ class GooglesheetService():
         except:
             print("cannot read spreadsheet values, sleep and try again")
             traceback.print_exc()
-            time.sleep(60)
+            time.sleep(180)
             result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, range=rangeName).execute()
             
         return result.get('values', [])

@@ -1,5 +1,5 @@
 '''
-https://goodinfo.tw/StockInfo/StockDividendSchedule.asp?STOCK_ID=9924
+https://goodinfo.tw/StockInfo/StockDividendSchedule.asp?STOCK_ID=1101
 
 Created on 2018年7月17日
 @author: rocky.wang
@@ -13,15 +13,10 @@ import time
 import traceback
 import lineTool
 
-eachTimeToSleepWhenFetch = 10
+sleepSeconds = 8
 
 def main():
     
-#     sid = "9924"
-#     rowList = fetch(sid)
-#     with open("stockDividendSchedule_{}.csv".format(sid), "w", newline="", encoding="utf-8") as f1:
-#         csv.writer(f1).writerows(rowList)
-        
     # 用來比對已經執行過的，不再重新執行
     existList = []
     for name in os.listdir():
@@ -55,7 +50,7 @@ def main():
         with open("stockDividendSchedule_{}.csv".format(sid), "w", newline="", encoding="utf-8") as f1:
             csv.writer(f1).writerows(rowList)
      
-        time.sleep(eachTimeToSleepWhenFetch)
+        time.sleep(sleepSeconds)
         
 
 def fetch(sid):
@@ -77,8 +72,7 @@ def fetch(sid):
         lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "fetchStockDividendSchedule too fast to be blocked")
 
     soup = BeautifulSoup(r.text, "html.parser")
-    
-    trs = soup.find("table", {"class": "solid_1_padding_3_3_tbl"}).findAll("tr", id=re.compile("^row"))
+    trs = soup.find("table", {"class": "solid_1_padding_4_3_tbl"}).findAll("tr", id=re.compile("^row"))
     for tr in trs:
         row = []
         for td in tr.findAll("td"):

@@ -38,8 +38,9 @@ def main():
             amt2 = int(rowList[2][17].replace(",", ""))
             amt3 = int(rowList[3][17].replace(",", ""))
         except:
-            print(name)
-            print(row)
+#             print(name)
+#             print(row)
+            pass
             
         if amt1 > 0 and amt2 > 0 and amt3 > 0: 
             

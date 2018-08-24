@@ -73,7 +73,7 @@ def calRate(price:float, m:float, s:float):
 
 if __name__ == "__main__":
 
-    sid = "6128"
+    sid = "2834"
 
     j = fetchStock(sid)
     print(j)

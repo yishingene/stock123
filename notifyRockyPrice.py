@@ -51,7 +51,7 @@ def fetchAllSheetDataListFromMyGooglehseet():
     
     googlesheetService = GooglesheetService("1F3cT6ltHQ7gOYxCPSrPJGvMpUt3b5mRJIMR0gJ5ITr8")
     rowList = googlesheetService.getValues("掃描清單")
-    rowList = googlesheetService.getValues("測試掃描清單")
+#     rowList = googlesheetService.getValues("測試掃描清單")
     rowNum = 0
     sheetDataList = []
     for row in rowList:

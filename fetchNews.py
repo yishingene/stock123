@@ -3,6 +3,7 @@ Created on 2018年7月10日
 @author: rocky.wang
 '''
 import sys
+from requests.exceptions import ChunkedEncodingError
 sys.path.append("/data/data/com.termux/files/home/stock123")
 sys.path.append("/data/data/com.termux/files/home/stock123/latestNews")
 
@@ -48,19 +49,19 @@ def main():
     if len(rowList) == 0:
         print("no data found, stop to run")
         return
-    
+     
     for row in rowList:
         key = row[0] + row[1] + row[2] + row[3] + row[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
         if key in keyExistList:
             continue
-        
+         
         # 抓取每則消息的內容明細資料
         content = fetchDetail(row[5])
         row[5] = content # 把 onclickValue 替換成 content
         print(row)
         csvRowList.append(row)
         time.sleep(5)
-    
+     
     # 寫回 csv 檔
     with open("news.csv", "w", encoding="utf-8", newline="") as f1:
         csv.writer(f1).writerows(csvRowList)
@@ -148,7 +149,7 @@ def processNotifyNews():
         pingNotifySidList.append(row[0])
     print(pingNotifySidList)
     
-    # 雪人未新增
+    # 雪人
     time.sleep(2)
     googlesheetService = GooglesheetService("1u5QaL_uyfXhom9iHVMXF1mX8D-Ssdc3zOSGFeS-Z5tk")
     sharonRowList = googlesheetService.getValues("新聞通知清單")
@@ -169,15 +170,16 @@ def processNotifyNews():
             print(msg)
             if csvRow[0] in notifySidList:
                 print("notify me")
-                lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], msg)
+                notifyLineMsg(os.environ["LINE_TEST_TOKEN"], msg)
+                
                 
             if csvRow[0] in pingNotifySidList:
                 print("notify ping")
-                lineTool.lineNotify(os.environ["LINE_PING_TOKEN"], msg)
+                notifyLineMsg(os.environ["LINE_PING_TOKEN"], msg)
             
             if csvRow[0] in sharonNotifySidList:
                 print("notify sharon")
-                lineTool.lineNotify(os.environ["LINE_SHARON_TOKEN"], msg)
+                notifyLineMsg(os.environ["LINE_SHARON_TOKEN"], msg)
                 
             csvRow[6] = "Done"
 
@@ -186,9 +188,28 @@ def processNotifyNews():
         csv.writer(f1).writerows(csvRowList)
 
 
+
+'''
+不是一個非常好的解決方式，但因為會遇到莫名的問題，先這樣解決
+'''
+def notifyLineMsg(token, msg, retry=20):
+    print("retry times", retry)
+    try:
+        lineTool.lineNotify(token, msg)
+    except ChunkedEncodingError as e:
+        print(e)
+        retry = retry - 1
+        msg = msg[0: len(msg)-1]
+        if retry > 0:
+            time.sleep(1)
+            notifyLineMsg(token, msg, retry)
+        else:
+            raise e
+
+
 if __name__ == "__main__":
     try:
         main()
-    except:
+    except Exception as e:
         traceback.print_exc()
-        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], "readNews error")
+        lineTool.lineNotify(os.environ["LINE_TEST_TOKEN"], e)

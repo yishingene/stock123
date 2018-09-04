@@ -9,6 +9,7 @@ import re, csv
 def main():
     fetch()
 
+# https://goodinfo.tw/StockInfo/StockDividendPolicy.asp?STOCK_ID=1215
 
 def fetch():
 

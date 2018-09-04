@@ -38,7 +38,7 @@ def main():
             fetchOtcStockIdFormSheet(sheetData[1], sheetData[3], sheetData[2])
         except:
             print("抓取失敗，重試一次")
-            time.sleep(2)
+            time.sleep(30)
             fetchOtcStockIdFormSheet(sheetData[1], sheetData[3], sheetData[2])
         
         time.sleep(1)

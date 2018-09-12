@@ -51,7 +51,7 @@ def main():
             fetch(stockId)
  
         print("sleep x seconds then start...")
-        time.sleep(10)
+        time.sleep(8)
 
     
 def fetch(stockId):

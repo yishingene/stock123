@@ -43,25 +43,25 @@ def main():
         for csvRow in csvRowList:
             key = csvRow[0] + csvRow[1] + csvRow[2] + csvRow[3] + csvRow[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
             keyExistList.append(key)
-    
+     
     # 抓取最新消息資料
     rowList = fetchNewsList()
     if len(rowList) == 0:
         print("no data found, stop to run")
         return
-     
+      
     for row in rowList:
         key = row[0] + row[1] + row[2] + row[3] + row[4] # 以「代號」「名稱」「日期」「時間」「標題」組合起來一起當 key
         if key in keyExistList:
             continue
-         
+          
         # 抓取每則消息的內容明細資料
         content = fetchDetail(row[5])
         row[5] = content # 把 onclickValue 替換成 content
         print(row)
         csvRowList.append(row)
         time.sleep(5)
-     
+      
     # 寫回 csv 檔
     with open("news.csv", "w", encoding="utf-8", newline="") as f1:
         csv.writer(f1).writerows(csvRowList)
@@ -172,7 +172,6 @@ def processNotifyNews():
                 print("notify me")
                 notifyLineMsg(os.environ["LINE_TEST_TOKEN"], msg)
                 
-                
             if csvRow[0] in pingNotifySidList:
                 print("notify ping")
                 notifyLineMsg(os.environ["LINE_PING_TOKEN"], msg)
@@ -183,6 +182,8 @@ def processNotifyNews():
                 
             csvRow[6] = "Done"
 
+    csvRowList = csvRowList[-1000:]
+    
     # 寫回 csv 檔
     with open("news.csv", "w", encoding="utf-8", newline="") as f1:
         csv.writer(f1).writerows(csvRowList)

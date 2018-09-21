@@ -26,7 +26,6 @@ def main1():
 #     googlesheetService = GooglesheetService("1xgtt4xjZh4Nsg6_uQnuphIbMLrBSLM-0OsOuz93NZAc")
 #     rowList = googlesheetService.getValues("新聞通知清單")
     
-
     # 雪人
     googlesheetService = GooglesheetService("1u5QaL_uyfXhom9iHVMXF1mX8D-Ssdc3zOSGFeS-Z5tk")
     rowList = googlesheetService.getValues("新聞通知清單")
@@ -200,7 +199,7 @@ def notifyLineMsg(token, msg, retry=20):
     except ChunkedEncodingError as e:
         print(e)
         retry = retry - 1
-        msg = msg[0: len(msg)-1]
+        msg = msg[0: len(msg)-3]
         if retry > 0:
             time.sleep(1)
             notifyLineMsg(token, msg, retry)

@@ -199,7 +199,7 @@ def notifyLineMsg(token, msg, retry=20):
     except ChunkedEncodingError as e:
         print(e)
         retry = retry - 1
-        msg = msg[0: len(msg)-3]
+        msg = msg[0: len(msg)-5]
         if retry > 0:
             time.sleep(1)
             notifyLineMsg(token, msg, retry)

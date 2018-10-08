@@ -47,6 +47,8 @@ def main():
 #         lineTool.lineNotify(os.environ["LINE_0050_TOKEN5"], msg)
 #         time.sleep(3)
 #         lineTool.lineNotify(os.environ["LINE_0050_TOKEN6"], msg)
+#         time.sleep(3)
+#         lineTool.lineNotify(os.environ["LINE_0050_TOKEN7"], msg)
 
 
 def get_final_price_by_file(stockId):
